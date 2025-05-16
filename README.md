@@ -2,4 +2,4 @@
 
 ## Modèle Physique de Données (MPD)
 
-![Modèle Physique de Données](doc/mpd.png)
+![Modèle Physique de Données](mpd.png)
