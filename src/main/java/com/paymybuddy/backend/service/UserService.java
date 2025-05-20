@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.paymybuddy.backend.dto.FriendDTO;
 import com.paymybuddy.backend.dto.RegistrationUserDTO;
-import com.paymybuddy.backend.dto.UserDTO;
+import com.paymybuddy.backend.dto.LoginUserDTO;
 import com.paymybuddy.backend.dto.ValidRegistrationUserDTO;
 import com.paymybuddy.backend.model.User;
 import com.paymybuddy.backend.repository.UserRepository;
@@ -54,33 +54,26 @@ public class UserService {
 		return new ValidRegistrationUserDTO(savedUser.getUsername(), savedUser.getEmail());
 	}
 
-	public List<UserDTO> getFriendsOfUser(int id) {
-		User user = userRepository.findById(id).get();
-
-		List<UserDTO> friends = user.getFriends().stream()
-				.map(friend -> new UserDTO(friend.getId(), friend.getUsername(), friend.getEmail()))
-				.collect(Collectors.toList());
-		return friends;
-	}
+	
 
 
 
-	public FriendDTO addFriends(int userId, String email) {
+//	public FriendDTO addFriends(int userId, String email) {
 
-		User user = userRepository.findUserById(userId).get();
-		if (user.getEmail().equalsIgnoreCase(email)) {
-			throw new IllegalArgumentException("Vous ne pouvez pas vous ajouter vous même");
-		}
+//		User user = userRepository.findUserById(userId).get();
+	//	if (user.getEmail().equalsIgnoreCase(email)) {
+		//	throw new IllegalArgumentException("Vous ne pouvez pas vous ajouter vous même");
+//		}
+//
+//		User friend = userRepository.findUserByEmail(email).get();
+//		if (user.getFriends().contains(friend)) {
+//			throw new IllegalArgumentException("Cet utilisateur est déjà dans votre liste d'amis");
+//		}
 
-		User friend = userRepository.findUserByEmail(email).get();
-		if (user.getFriends().contains(friend)) {
-			throw new IllegalArgumentException("Cet utilisateur est déjà dans votre liste d'amis");
-		}
+	//	user.getFriends().add(friend);
+	//	userRepository.save(user);
 
-		user.getFriends().add(friend);
-		userRepository.save(user);
-
-		return new FriendDTO(friend.getEmail());
-	}
+//		return new FriendDTO(friend.getEmail());
+//	}
 
 }

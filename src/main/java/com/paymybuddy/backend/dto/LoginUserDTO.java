@@ -1,30 +1,23 @@
 package com.paymybuddy.backend.dto;
 
-public class UserDTO {
+public class LoginUserDTO {
 
-	private int id;
+	
 	private String username;
 	private String email;
 
-	public UserDTO(int id, String username, String email) {
+	public LoginUserDTO( String username, String email) {
 		super();
-		this.id = id;
+		
 		this.username = username;
 		this.email = email;
 	}
 
-	public UserDTO() {
+	public LoginUserDTO() {
 
 	};
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
+	
 	public String getUsername() {
 		return username;
 	}

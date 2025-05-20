@@ -1,6 +1,6 @@
 package com.paymybuddy.backend.dto;
 
-public class LoginDTO {
+public class ValidLoginUserDTO {
 
 	private String email;
 	private String password;

@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.paymybuddy.backend.dto.FriendDTO;
+import com.paymybuddy.backend.dto.LoginUserDTO;
 import com.paymybuddy.backend.dto.RegistrationUserDTO;
+import com.paymybuddy.backend.dto.ValidLoginUserDTO;
 import com.paymybuddy.backend.dto.ValidRegistrationUserDTO;
 import com.paymybuddy.backend.service.UserService;
 
@@ -33,8 +35,15 @@ public class UserController {
 
 	}
 
-	// @PostMapping("/login")
-	// public Response
+	@PostMapping("/login")
+	public ResponseEntity<ValidLoginUserDTO> loginUser(@RequestBody LoginUserDTO loginUser) {
+		try {
+			ValidLoginUserDTO validLogin = userService.loginUser(loginUser);
+			return ResponseEntity.status(HttpStatus.OK).body(validLogin);
+		}catch (IllegalArgumentException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()	;
+		}
+	}
 
 //	@PostMapping("/user/{id}/friends")
 //	public ResponseEntity<FriendDTO> addFriend(@PathVariable int userId, @RequestBody FriendDTO friend) {

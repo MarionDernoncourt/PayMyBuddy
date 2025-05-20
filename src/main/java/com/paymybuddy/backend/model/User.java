@@ -16,7 +16,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="Users")
+@Table(name="users")
 public class User {
 
 	@Id
@@ -35,6 +35,14 @@ public class User {
 	
 	@Column(name="account_balance", precision = 10, scale = 2)
 	private BigDecimal accountBalance;
+
+	public BigDecimal getAccountBalance() {
+		return accountBalance;
+	}
+
+	public void setAccountBalance(BigDecimal accountBalance) {
+		this.accountBalance = accountBalance;
+	}
 
 	@ManyToMany(
 			fetch = FetchType.LAZY)
