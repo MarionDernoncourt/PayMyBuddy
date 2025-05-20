@@ -36,6 +36,7 @@ public class Transaction {
 			)
 	@JoinColumn(name="sender_id", nullable = false)
 	private User sender;
+	
 	public int getId() {
 		return id;
 	}

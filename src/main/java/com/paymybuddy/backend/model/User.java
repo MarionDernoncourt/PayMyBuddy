@@ -1,5 +1,6 @@
 package com.paymybuddy.backend.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,9 @@ public class User {
 
 	@Column(name = "password", length = 255)
 	private String password;
+	
+	@Column(name="account_balance", precision = 10, scale = 2)
+	private BigDecimal accountBalance;
 
 	@ManyToMany(
 			fetch = FetchType.LAZY)
