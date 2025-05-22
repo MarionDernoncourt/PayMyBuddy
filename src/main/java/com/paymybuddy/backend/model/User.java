@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -45,7 +46,11 @@ public class User {
 	}
 
 	@ManyToMany(
-			fetch = FetchType.LAZY)
+			fetch = FetchType.LAZY, 
+			cascade = {
+					CascadeType.PERSIST,
+					CascadeType.MERGE
+			})
 			
 	@JoinTable(
 			name = "user_user", 
@@ -59,7 +64,7 @@ public class User {
 	
 	public void addFriend(User user) {
 		friends.add(user);
-		user.getFriends().add(this);
+	user.getFriends().add(this);
 	}
 	
 	public void removeFriend(User user) {

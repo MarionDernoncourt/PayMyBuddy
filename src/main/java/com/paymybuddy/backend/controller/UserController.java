@@ -1,59 +1,42 @@
 package com.paymybuddy.backend.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.paymybuddy.backend.dto.FriendDTO;
-import com.paymybuddy.backend.dto.LoginUserDTO;
-import com.paymybuddy.backend.dto.RegistrationUserDTO;
-import com.paymybuddy.backend.dto.ValidLoginUserDTO;
-import com.paymybuddy.backend.dto.ValidRegistrationUserDTO;
 import com.paymybuddy.backend.service.UserService;
 
-import jakarta.validation.Valid;
-
 @RestController
+@RequestMapping("/api/users")
 public class UserController {
 
+	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	@Autowired
-	private UserService userService;
-
-	@PostMapping("/register")
-	public ResponseEntity<ValidRegistrationUserDTO> registerUser(
-			@RequestBody @Valid RegistrationUserDTO registrationUser) {
+	private final UserService userService;
+	
+	public UserController(UserService userService) {
+		this.userService = userService;
+	}
+	
+	@PostMapping("/{userId}/friends")
+	public ResponseEntity<FriendDTO> addFriend(@PathVariable int userId, @RequestBody FriendDTO friend) {
+		logger.info("addFriend called", friend.getEmail());
 		try {
-			ValidRegistrationUserDTO validRegistation = userService.registerUser(registrationUser);
-			return ResponseEntity.status(HttpStatus.CREATED).body(validRegistation);
-		} catch (IllegalArgumentException e) {
+			FriendDTO addedFriend = userService.addFriends(userId, friend.getEmail());
+			return ResponseEntity.status(HttpStatus.OK).body(addedFriend);
+		}catch(IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		}
 
-	}
-
-	@PostMapping("/login")
-	public ResponseEntity<ValidLoginUserDTO> loginUser(@RequestBody LoginUserDTO loginUser) {
-		try {
-			ValidLoginUserDTO validLogin = userService.loginUser(loginUser);
-			return ResponseEntity.status(HttpStatus.OK).body(validLogin);
-		}catch (IllegalArgumentException e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()	;
 		}
 	}
-
-//	@PostMapping("/user/{id}/friends")
-//	public ResponseEntity<FriendDTO> addFriend(@PathVariable int userId, @RequestBody FriendDTO friend) {
-//		try {
-//			FriendDTO addedFriend = userService.addFriends(userId, friend.getEmail());
-//			return ResponseEntity.status(HttpStatus.OK).body(addedFriend);
-	//	} catch (IllegalArgumentException e) {
-	//		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-	//	}
-
-	// }
-
+	
+	
 }

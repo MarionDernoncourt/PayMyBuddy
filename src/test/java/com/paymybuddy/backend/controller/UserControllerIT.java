@@ -1,51 +1,62 @@
 package com.paymybuddy.backend.controller;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.paymybuddy.backend.dto.RegistrationUserDTO;
 
 @SpringBootTest
-@ActiveProfiles("test")
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 public class UserControllerIT {
 
 	@Autowired
 	private MockMvc mockMvc;
-
-	private ObjectMapper objectMapper = new ObjectMapper();
-
-	@Test
-	public void registrationUser() throws Exception {
-		RegistrationUserDTO newUser = new RegistrationUserDTO("Severus", "SRogue@poudlard.com", "Lily");
-		String newUserJson = objectMapper.writeValueAsString(newUser);
-		mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(newUserJson))
-				.andExpect(status().isCreated());
+	
+	@MockBean
+	private JwtDecoder jwtDecoder;
+	
+	private ObjectMapper objectMapper = new ObjectMapper()	;
+	
+	@BeforeEach
+	void setUp() {
+		Jwt jwt = Jwt.withTokenValue("mock-token")
+				.header("alg", "none")
+				.claim("sub", "test-user")
+				.claim("scope", "read write")
+				.build();
+		
+		when(jwtDecoder.decode("mock-token")).thenReturn(jwt);
 	}
+		
 	
 	@Test
-	public void registrationUser_withUserEmailAlreadyRegister() throws Exception {
-		RegistrationUserDTO newUser = new RegistrationUserDTO("Drago", "hpotter@gryffondor", "12345");
-		String newUserJson = objectMapper.writeValueAsString(newUser);
-		mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(newUserJson))
-		.andExpect(status().isBadRequest());
+	public void addFriendTest() throws Exception {
+		int userId = 1;
+	//	FriendDTO friendDTO = new FriendDTO();
+	//	friendDTO.setEmail("friend@gmail.com");
+		
+		String json = "{\"email\":\"friend@gmail.com\"}";
+		
+		mockMvc.perform(post("/api/users/" + userId + "/friends")
+				.header("Authorization", "Bearer mock-token")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json))
+		.andExpect(status().isOk());
 	}
-	
-	@Test
-	public void registrationUser_withUserUsernameAlreadyRegister() throws Exception {
-		RegistrationUserDTO newUser = new RegistrationUserDTO("Harry", "harry@poudlard.om", "12345");
-		String newUserJson = objectMapper.writeValueAsString(newUser);
-		mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(newUserJson))
-		.andExpect(status().isBadRequest());
-	}
-
 }

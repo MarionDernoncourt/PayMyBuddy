@@ -1,13 +1,14 @@
 package com.paymybuddy.backend.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -16,72 +17,104 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.paymybuddy.backend.dto.RegistrationUserDTO;
-import com.paymybuddy.backend.dto.ValidRegistrationUserDTO;
+import com.paymybuddy.backend.dto.FriendDTO;
 import com.paymybuddy.backend.model.User;
 import com.paymybuddy.backend.repository.UserRepository;
-import com.paymybuddy.backend.security.PasswordUtils;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
 	@Mock
 	private UserRepository userRepository;
-
-	@Mock
-	private PasswordUtils passwordUtils;
-
+	
 	@InjectMocks
 	private UserService userService;
 
-	@Test
-	public void testRegisterUser_Successfully() throws Exception {
-
-		RegistrationUserDTO newUser = new RegistrationUserDTO("john", "john@mail.com", "password123");
-
-		when(userRepository.findByEmailIgnoreCase("john@mail.com")).thenReturn(Optional.empty());
-		when(userRepository.findByUsernameIgnoreCase("john")).thenReturn(Optional.empty());
-		when(passwordUtils.hashPassword(anyString())).thenReturn("hashedPassword");
-
-		User savedUser = new User();
-		savedUser.setEmail("john@mail.com");
-		savedUser.setUsername("john");
-		savedUser.setPassword("hashedPassword");
-
-		when(userRepository.save(any(User.class))).thenReturn(savedUser);
-
-		ValidRegistrationUserDTO result = userService.registerUser(newUser);
-
-		assertEquals("john", result.getUsername());
-		assertEquals("john@mail.com", result.getEmail());
-	}
-
-	@Test
-	public void testRegisterUser_WhenEmailAlreadyUsed() throws Exception {
-
-		RegistrationUserDTO newUser = new RegistrationUserDTO("john", "john@mail.com", "password123");
-
-		when(userRepository.findByEmailIgnoreCase("john@mail.com")).thenReturn(Optional.of(new User()));
-
-		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-				() -> userService.registerUser(newUser));
-
-		assertEquals("Cet email est déjà utilisé par un autre utilisateur", exception.getMessage());
-		verify(userRepository, never()).save(any());
-	}
 	
+
 	@Test
-	public void testRegisterUser_WhenUsernameAlreadyUsed() throws Exception {
+	public void testAddFriend() {
+		User user = new User() ;
+		user.setId(1);
+		user.setEmail("user@gmail.com");
+		user.setFriends(new ArrayList<>());
+		
+		User friend = new User();
+		friend.setId(2);
+		friend.setEmail("friend@gmail.com");
+		friend.setFriends(new ArrayList<>());
+		
+		when(userRepository.findById(1)).thenReturn(Optional.of(user));
+		when(userRepository.findByEmailIgnoreCase("friend@gmail.com")).thenReturn(Optional.of(friend));
+		when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
+		
+		FriendDTO result = userService.addFriends(1,"friend@gmail.com");
+		
+		assertNotNull(result);
+		assertEquals("friend@gmail.com", result.getEmail());
+		assertTrue(user.getFriends().contains(friend));
+		
+		verify(userRepository).save(user);
+		}
+	
+	 @Test
+	    void addFriends_shouldThrowWhenUserNotFound() {
+	        when(userRepository.findById(1)).thenReturn(Optional.empty());
 
-		RegistrationUserDTO newUser = new RegistrationUserDTO("john", "john@mail.com", "password123");
+	        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+	            () -> userService.addFriends(1, "friend@example.com"));
 
-		when(userRepository.findByUsernameIgnoreCase("john")).thenReturn(Optional.of(new User()));
+	        assertEquals("Utilisateur non trouvé", ex.getMessage());
+	    }
 
-		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-				() -> userService.registerUser(newUser));
+	    @Test
+	    void addFriends_shouldThrowWhenAddingSelf() {
+	        User user = new User();
+	        user.setId(1);
+	        user.setEmail("user@example.com");
 
-		assertEquals("Ce pseudo est déjà pris, merci d'en choisir un autre", exception.getMessage());
-		verify(userRepository, never()).save(any());
-	}
+	        when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
+	        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+	            () -> userService.addFriends(1, "user@example.com"));
+
+	        assertEquals("Vous ne pouvez pas vous ajouter vous même", ex.getMessage());
+	    }
+
+	    @Test
+	    void addFriends_shouldThrowWhenFriendNotFound() {
+	        User user = new User();
+	        user.setId(1);
+	        user.setEmail("user@example.com");
+
+	        when(userRepository.findById(1)).thenReturn(Optional.of(user));
+	        when(userRepository.findByEmailIgnoreCase("friend@example.com")).thenReturn(Optional.empty());
+
+	        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+	            () -> userService.addFriends(1, "friend@example.com"));
+
+	        assertEquals("Aucun utilisateur trouvé", ex.getMessage());
+	    }
+
+	    @Test
+	    void addFriends_shouldThrowWhenFriendAlreadyAdded() {
+	        User user = new User();
+	        user.setId(1);
+	        user.setEmail("user@example.com");
+
+	        User friend = new User();
+	        friend.setId(2);
+	        friend.setEmail("friend@example.com");
+
+	        user.setFriends(new ArrayList<>());
+	        user.getFriends().add(friend);
+
+	        when(userRepository.findById(1)).thenReturn(Optional.of(user));
+	        when(userRepository.findByEmailIgnoreCase("friend@example.com")).thenReturn(Optional.of(friend));
+
+	        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+	            () -> userService.addFriends(1, "friend@example.com"));
+
+	        assertEquals("Cet utilisateur est déjà dans votre liste d'amis", ex.getMessage());
+	    }
 }

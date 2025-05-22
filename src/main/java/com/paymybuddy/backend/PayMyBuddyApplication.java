@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.paymybuddy.backend.service.TransactionService;
 import com.paymybuddy.backend.service.UserService;
@@ -11,6 +12,7 @@ import com.paymybuddy.backend.service.UserService;
 import jakarta.transaction.Transactional;
 
 @SpringBootApplication
+
 public class PayMyBuddyApplication implements CommandLineRunner {
 
 	@Autowired
@@ -20,6 +22,16 @@ public class PayMyBuddyApplication implements CommandLineRunner {
 	private TransactionService transactionService;
 
 	public static void main(String[] args) {
+		
+		
+		System.out.println("nimbus3000" + new BCryptPasswordEncoder().encode("johnjohn"));
+
+
+
+
+
+
+		
 		SpringApplication.run(PayMyBuddyApplication.class, args);
 	}
 
