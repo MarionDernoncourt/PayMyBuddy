@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.paymybuddy.backend.dto.FriendDTO;
 import com.paymybuddy.backend.model.User;
 import com.paymybuddy.backend.repository.UserRepository;
-import com.paymybuddy.backend.security.SecurityService;
 
 import jakarta.transaction.Transactional;
 
@@ -18,23 +17,17 @@ public class UserService {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-	private final SecurityService securityService;
-
 	private final UserRepository userRepository;
 
-	public UserService(UserRepository userRepository, SecurityService securityService) {
+	public UserService(UserRepository userRepository) {
 		this.userRepository = userRepository;
-		this.securityService = securityService;
 	}
 
 	@Transactional
-	public FriendDTO addFriends(int userId, String email) {
+	public FriendDTO addFriends(String username, String email) {
 		logger.info("Entrée dans addFriends");
-		
-		securityService.checkUserIdMatches(userId);
 
-
-		User user = userRepository.findById(userId)
+		User user = userRepository.findByUsernameIgnoreCase(username)
 				.orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
 
 		if (user.getEmail().equalsIgnoreCase(email)) {
@@ -57,12 +50,10 @@ public class UserService {
 
 	}
 
-	public BigDecimal getAccountBalance(int userId) {
-		logger.info("Tentative de récupération du solde du userId {}", userId);
+	public BigDecimal getAccountBalance(String username) {
+		logger.info("Tentative de récupération du solde du user {}", username);
 
-		securityService.checkUserIdMatches(userId);
-
-		User user = userRepository.findById(userId)
+		User user = userRepository.findByUsernameIgnoreCase(username)
 				.orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
 
 		BigDecimal currentBalance = user.getAccountBalance();
@@ -73,11 +64,9 @@ public class UserService {
 
 	}
 
-	public void addFixedAmountToAccount(int userId) {
-		
-		securityService.checkUserIdMatches(userId);
+	public void addFixedAmountToAccount(String username) {
 
-		User user = userRepository.findById(userId)
+		User user = userRepository.findByUsernameIgnoreCase(username)
 				.orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
 		BigDecimal currentBalance = user.getAccountBalance();
 		BigDecimal newBalance = currentBalance.add(new BigDecimal("50.00"));
@@ -85,4 +74,5 @@ public class UserService {
 
 		userRepository.save(user);
 	}
+	
 }

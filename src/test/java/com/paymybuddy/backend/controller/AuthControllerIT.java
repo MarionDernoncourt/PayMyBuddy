@@ -29,7 +29,7 @@ public class AuthControllerIT {
 	public void registrationUser() throws Exception {
 		RegistrationUserDTO newUser = new RegistrationUserDTO("Severus", "SRogue@poudlard.com", "Lily");
 		String newUserJson = objectMapper.writeValueAsString(newUser);
-		mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(newUserJson))
+		mockMvc.perform(post("/api/auth/register").contentType(MediaType.APPLICATION_JSON).content(newUserJson))
 				.andExpect(status().isCreated());
 	}
 
@@ -37,7 +37,7 @@ public class AuthControllerIT {
 	public void registrationUser_withUserEmailAlreadyRegister() throws Exception {
 		RegistrationUserDTO newUser = new RegistrationUserDTO("Drago", "hpotter@gryffondor", "12345");
 		String newUserJson = objectMapper.writeValueAsString(newUser);
-		mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(newUserJson))
+		mockMvc.perform(post("/api/auth/register").contentType(MediaType.APPLICATION_JSON).content(newUserJson))
 				.andExpect(status().isBadRequest());
 	}
 
@@ -45,7 +45,7 @@ public class AuthControllerIT {
 	public void registrationUser_withUserUsernameAlreadyRegister() throws Exception {
 		RegistrationUserDTO newUser = new RegistrationUserDTO("Harry", "harry@poudlard.om", "12345");
 		String newUserJson = objectMapper.writeValueAsString(newUser);
-		mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON).content(newUserJson))
+		mockMvc.perform(post("/api/auth/register").contentType(MediaType.APPLICATION_JSON).content(newUserJson))
 				.andExpect(status().isBadRequest());
 	}
 

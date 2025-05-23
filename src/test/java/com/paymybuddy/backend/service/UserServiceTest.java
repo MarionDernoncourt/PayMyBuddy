@@ -37,6 +37,7 @@ public class UserServiceTest {
 	public void testAddFriend() {
 		User user = new User() ;
 		user.setId(1);
+		user.setUsername("username");
 		user.setEmail("user@gmail.com");
 		user.setFriends(new ArrayList<>());
 		
@@ -45,11 +46,11 @@ public class UserServiceTest {
 		friend.setEmail("friend@gmail.com");
 		friend.setFriends(new ArrayList<>());
 		
-		when(userRepository.findById(1)).thenReturn(Optional.of(user));
+		when(userRepository.findByUsernameIgnoreCase("username")).thenReturn(Optional.of(user));
 		when(userRepository.findByEmailIgnoreCase("friend@gmail.com")).thenReturn(Optional.of(friend));
 		when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
 		
-		FriendDTO result = userService.addFriends(1,"friend@gmail.com");
+		FriendDTO result = userService.addFriends("username","friend@gmail.com");
 		
 		assertNotNull(result);
 		assertEquals("friend@gmail.com", result.getEmail());
@@ -60,10 +61,10 @@ public class UserServiceTest {
 	
 	 @Test
 	    void testAddFriends_shouldThrowWhenUserNotFound() {
-	        when(userRepository.findById(1)).thenReturn(Optional.empty());
+	        when(userRepository.findByUsernameIgnoreCase("username")).thenReturn(Optional.empty());
 
 	        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-	            () -> userService.addFriends(1, "friend@example.com"));
+	            () -> userService.addFriends("username", "friend@example.com"));
 
 	        assertEquals("Utilisateur non trouvé", ex.getMessage());
 	    }
@@ -72,12 +73,13 @@ public class UserServiceTest {
 	    void testAddFriends_shouldThrowWhenAddingSelf() {
 	        User user = new User();
 	        user.setId(1);
+	        user.setUsername("username");
 	        user.setEmail("user@example.com");
 
-	        when(userRepository.findById(1)).thenReturn(Optional.of(user));
+	        when(userRepository.findByUsernameIgnoreCase("username")).thenReturn(Optional.of(user));
 
 	        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-	            () -> userService.addFriends(1, "user@example.com"));
+	            () -> userService.addFriends("username", "user@example.com"));
 
 	        assertEquals("Vous ne pouvez pas vous ajouter vous même", ex.getMessage());
 	    }
@@ -86,13 +88,14 @@ public class UserServiceTest {
 	    void testAddFriends_shouldThrowWhenFriendNotFound() {
 	        User user = new User();
 	        user.setId(1);
+	        user.setUsername("username");
 	        user.setEmail("user@example.com");
 
-	        when(userRepository.findById(1)).thenReturn(Optional.of(user));
+	        when(userRepository.findByUsernameIgnoreCase("username")).thenReturn(Optional.of(user));
 	        when(userRepository.findByEmailIgnoreCase("friend@example.com")).thenReturn(Optional.empty());
 
 	        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-	            () -> userService.addFriends(1, "friend@example.com"));
+	            () -> userService.addFriends("username", "friend@example.com"));
 
 	        assertEquals("Aucun utilisateur trouvé", ex.getMessage());
 	    }
@@ -101,6 +104,7 @@ public class UserServiceTest {
 	    void testAddFriends_shouldThrowWhenFriendAlreadyAdded() {
 	        User user = new User();
 	        user.setId(1);
+	        user.setUsername("username");
 	        user.setEmail("user@example.com");
 
 	        User friend = new User();
@@ -110,11 +114,11 @@ public class UserServiceTest {
 	        user.setFriends(new ArrayList<>());
 	        user.getFriends().add(friend);
 
-	        when(userRepository.findById(1)).thenReturn(Optional.of(user));
+	        when(userRepository.findByUsernameIgnoreCase("username")).thenReturn(Optional.of(user));
 	        when(userRepository.findByEmailIgnoreCase("friend@example.com")).thenReturn(Optional.of(friend));
 
 	        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-	            () -> userService.addFriends(1, "friend@example.com"));
+	            () -> userService.addFriends("username", "friend@example.com"));
 
 	        assertEquals("Cet utilisateur est déjà dans votre liste d'amis", ex.getMessage());
 	    }
@@ -126,9 +130,9 @@ public class UserServiceTest {
 	    	user.setUsername("john");
 	    	user.setAccountBalance(BigDecimal.valueOf(50.00));
 	    	
-	    	when(userRepository.findById(1)).thenReturn(Optional.of(user));
+	    	when(userRepository.findByUsernameIgnoreCase("john")).thenReturn(Optional.of(user));
 	    	
-	    	BigDecimal currentBalance = userService.getAccountBalance(user.getId());
+	    	BigDecimal currentBalance = userService.getAccountBalance("john");
 	    	
 	    	assertEquals(BigDecimal.valueOf(50.00), currentBalance);
 	    }
@@ -137,13 +141,15 @@ public class UserServiceTest {
 	    public void testGetAccountBalance_shouldWrongArgument() {
 	    	User user = new User();
 	    	user.setId(1);
-	    	user.setUsername("john");
+	    	user.setUsername("username");
 	    	user.setAccountBalance(BigDecimal.valueOf(50.00));
 	    	
-	    	when(userRepository.findById(1)).thenReturn(Optional.empty());
+	    	when(userRepository.findByUsernameIgnoreCase("username")).thenReturn(Optional.empty());
 	    	
 	    	IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-		            () -> userService.getAccountBalance(1));
+		            () -> userService.getAccountBalance("username"));
+	    	
+	    	assertEquals("Utilisateur non trouvé", ex.getMessage());
 	    	}
 	    
 }

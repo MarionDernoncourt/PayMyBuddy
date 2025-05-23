@@ -9,16 +9,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
@@ -40,7 +36,8 @@ public class SpringSecurityConfig {
 					.requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
 					.anyRequest().authenticated())
 				.oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
-				.httpBasic(Customizer.withDefaults()).build();
+				.httpBasic(Customizer.withDefaults())
+				.build();
 	}
 
 	@Bean
@@ -60,13 +57,8 @@ public class SpringSecurityConfig {
 	}
 
 	@Bean
-	public UserDetailsService users(PasswordEncoder passwordEncoder) {
-		UserDetails user = User.builder()
-				.username("user")
-				.password(passwordEncoder().encode("password"))
-				.roles("USER")
-				.build();
-		return new InMemoryUserDetailsManager(user);
+	public UserDetailsService usersDtailsService(MyUserDetailsService myUserDetailsService) {
+			return myUserDetailsService;
 	}
 	
 	@Bean

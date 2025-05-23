@@ -1,12 +1,12 @@
 package com.paymybuddy.backend.controller;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,10 +26,11 @@ public class UserController {
 		this.userService = userService;
 	}
 
-	@PostMapping("/{userId}/friends")
-	public ResponseEntity<FriendDTO> addFriend(@PathVariable int userId, @RequestBody FriendDTO friend) {
+	@PostMapping("/friends")
+	public ResponseEntity<FriendDTO> addFriend(Principal principal, @RequestBody FriendDTO friend) {
 		try {
-			FriendDTO addedFriend = userService.addFriends(userId, friend.getEmail());
+			String connectedUserUsername = principal.getName();
+			FriendDTO addedFriend = userService.addFriends(connectedUserUsername, friend.getEmail());
 			return ResponseEntity.status(HttpStatus.OK).body(addedFriend);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -38,10 +39,12 @@ public class UserController {
 		}
 	}
 
-	@GetMapping("/{userId}/account")
-	public ResponseEntity<BigDecimal> getAccountBalance(@PathVariable int userId) {
+	@GetMapping("/account")
+	public ResponseEntity<BigDecimal> getAccountBalance(Principal principal) {
 		try {
-			BigDecimal accountBalance = userService.getAccountBalance(userId);
+			String connectedUserUsername = principal.getName();
+
+			BigDecimal accountBalance = userService.getAccountBalance(connectedUserUsername);
 			return ResponseEntity.status(HttpStatus.OK).body(accountBalance);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -51,10 +54,12 @@ public class UserController {
 
 	}
 
-	@PostMapping("/{userId}/account/recharge")
-	public ResponseEntity<Void> rechargeAccount(@PathVariable int userId) {
+	@PostMapping("/account/recharge")
+	public ResponseEntity<Void> rechargeAccount(Principal principal) {
 		try {
-			userService.addFixedAmountToAccount(userId);
+			String connectedUserUsername = principal.getName();
+
+			userService.addFixedAmountToAccount(connectedUserUsername);
 			return ResponseEntity.status(HttpStatus.OK).build();
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
