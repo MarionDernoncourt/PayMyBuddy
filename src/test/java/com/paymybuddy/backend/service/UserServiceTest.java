@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -58,7 +59,7 @@ public class UserServiceTest {
 		}
 	
 	 @Test
-	    void addFriends_shouldThrowWhenUserNotFound() {
+	    void testAddFriends_shouldThrowWhenUserNotFound() {
 	        when(userRepository.findById(1)).thenReturn(Optional.empty());
 
 	        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
@@ -68,7 +69,7 @@ public class UserServiceTest {
 	    }
 
 	    @Test
-	    void addFriends_shouldThrowWhenAddingSelf() {
+	    void testAddFriends_shouldThrowWhenAddingSelf() {
 	        User user = new User();
 	        user.setId(1);
 	        user.setEmail("user@example.com");
@@ -82,7 +83,7 @@ public class UserServiceTest {
 	    }
 
 	    @Test
-	    void addFriends_shouldThrowWhenFriendNotFound() {
+	    void testAddFriends_shouldThrowWhenFriendNotFound() {
 	        User user = new User();
 	        user.setId(1);
 	        user.setEmail("user@example.com");
@@ -97,7 +98,7 @@ public class UserServiceTest {
 	    }
 
 	    @Test
-	    void addFriends_shouldThrowWhenFriendAlreadyAdded() {
+	    void testAddFriends_shouldThrowWhenFriendAlreadyAdded() {
 	        User user = new User();
 	        user.setId(1);
 	        user.setEmail("user@example.com");
@@ -117,4 +118,32 @@ public class UserServiceTest {
 
 	        assertEquals("Cet utilisateur est déjà dans votre liste d'amis", ex.getMessage());
 	    }
+	    
+	    @Test
+	    public void testGetAccountBalance() {
+	    	User user = new User();
+	    	user.setId(1);
+	    	user.setUsername("john");
+	    	user.setAccountBalance(BigDecimal.valueOf(50.00));
+	    	
+	    	when(userRepository.findById(1)).thenReturn(Optional.of(user));
+	    	
+	    	BigDecimal currentBalance = userService.getAccountBalance(user.getId());
+	    	
+	    	assertEquals(BigDecimal.valueOf(50.00), currentBalance);
+	    }
+	    
+	    @Test
+	    public void testGetAccountBalance_shouldWrongArgument() {
+	    	User user = new User();
+	    	user.setId(1);
+	    	user.setUsername("john");
+	    	user.setAccountBalance(BigDecimal.valueOf(50.00));
+	    	
+	    	when(userRepository.findById(1)).thenReturn(Optional.empty());
+	    	
+	    	IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+		            () -> userService.getAccountBalance(1));
+	    	}
+	    
 }

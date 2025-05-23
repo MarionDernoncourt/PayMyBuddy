@@ -1,46 +1,55 @@
 package com.paymybuddy.backend.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.paymybuddy.backend.dto.TransactionDTO;
 import com.paymybuddy.backend.model.Transaction;
+import com.paymybuddy.backend.model.User;
 import com.paymybuddy.backend.repository.TransactionRepository;
+import com.paymybuddy.backend.repository.UserRepository;
+import com.paymybuddy.backend.security.SecurityService;
 
 @Service
 public class TransactionService {
 
-		@Autowired
-		private TransactionRepository transactionRepository;
+	private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
+
+	private UserRepository userRepository;
+	private SecurityService securityService;
+	private TransactionRepository transactionRepository;
+
+
+	public TransactionService(UserRepository userRepository, SecurityService securityService, TransactionRepository transactionRepository) {
+		this.userRepository = userRepository;
+		this.securityService = securityService;
+		this.transactionRepository = transactionRepository;
+	}
+
+
+	public List<TransactionDTO> getUserTransactions(int userId) {
+		logger.info("Tentative de récupération des transactions du user : {}", userId);
+
+		securityService.checkUserIdMatches(userId);
 		
-		public List<TransactionDTO> getTransactions() {
-			Iterable<Transaction> transactions = transactionRepository.findAll();
-			
-			List<TransactionDTO> dtoListTransaction = new ArrayList<>();
-			
-			for(Transaction transaction : transactions) {
-				dtoListTransaction.add(new TransactionDTO(
-						transaction.getId()	,
-						transaction.getDescription(),
-						transaction.getAmount(),
-						transaction.getReceiver().getEmail(),
-						transaction.getSender().getEmail()
-						));
-			}
-			
-			return dtoListTransaction;
-				
-		}
-		
-		public Optional<Transaction> getTransactionById(int id) {
-			return transactionRepository.findById(id);
-		}
-		
-		public Transaction saveTransaction(Transaction transaction) {
-			return transactionRepository.save(transaction);
-		}
+		User user = userRepository.findById(userId).orElseThrow(() -> {
+			logger.warn("Utilisateur avec ID {} non trouvé", userId);
+			return new IllegalArgumentException("Utilisateur non trouvé");
+		});
+
+		List<Transaction> transactions = transactionRepository.findBySenderOrReceiver(user, user);
+
+		List<TransactionDTO> transactionDTO = transactions.stream()
+				.map(transaction -> new TransactionDTO(transaction.getDescription(), transaction.getAmount(),
+						transaction.getSender().getEmail(), transaction.getReceiver().getEmail()))
+				.toList();
+
+		logger.info("Nombre de transactions trouvées : {}", transactionDTO.size());
+		return transactionDTO;
+	}
+
 }

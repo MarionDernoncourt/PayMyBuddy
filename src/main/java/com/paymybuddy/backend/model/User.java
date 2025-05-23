@@ -35,7 +35,7 @@ public class User {
 	private String password;
 	
 	@Column(name="account_balance", precision = 10, scale = 2)
-	private BigDecimal accountBalance;
+	private BigDecimal accountBalance = BigDecimal.ZERO;
 
 	public BigDecimal getAccountBalance() {
 		return accountBalance;
