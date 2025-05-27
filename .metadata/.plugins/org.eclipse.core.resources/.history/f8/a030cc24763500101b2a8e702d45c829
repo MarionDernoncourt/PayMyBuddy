@@ -1,0 +1,67 @@
+package com.paymybuddy.backend.service;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.paymybuddy.backend.dto.RegistrationUserDTO;
+import com.paymybuddy.backend.dto.ValidRegistrationUserDTO;
+import com.paymybuddy.backend.model.User;
+import com.paymybuddy.backend.repository.UserRepository;
+import com.paymybuddy.backend.security.PasswordUtils;
+
+@ExtendWith(MockitoExtension.class)
+public class UserServiceTest {
+	
+	@Mock
+	private UserRepository userRepository;
+	
+	@Mock
+	private PasswordUtils passwordUtils;
+	
+	@InjectMocks
+	private UserService userService ;
+	
+	@Test
+	public void testRegisterUser_Successfully() throws Exception {
+		
+		RegistrationUserDTO newUser = new RegistrationUserDTO("john", "john@mail.com", "password123" );
+		
+		when(userRepository.findByEmailIgnoreCase("john@mail.com")).thenReturn(Optional.empty());
+		when(userRepository.findByUsernameIgnoreCase("john")).thenReturn(Optional.empty());
+		when(passwordUtils.hashPassword(anyString())).thenReturn("hashedPassword");
+		
+		User savedUser = new User();
+		savedUser.setEmail("john@mail.com");
+		savedUser.setUsername("john");
+		savedUser.setPassword("hashedPassword");
+		
+		when(userRepository.save(any(User.class))).thenReturn(savedUser);
+		
+		ValidRegistrationUserDTO result = userService.registerUser(newUser);
+		
+		assertEquals("john", result.getUsername());
+		assertEquals("john@mail.com", result.getEmail());
+	}
+	
+	@Test
+	public void testRegisterUser_WhenEmailAlreadyUsed() throws Exception {
+
+		RegistrationUserDTO newUser = new RegistrationUserDTO("john", "john@mail.com", "password123" );
+	
+		
+		when(userRepository.findByEmailIgnoreCase("john@mail.com")).thenReturn(Optional.of(new User()));
+
+	}
+	
+
+}

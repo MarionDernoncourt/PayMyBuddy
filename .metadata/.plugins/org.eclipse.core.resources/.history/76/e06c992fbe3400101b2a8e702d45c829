@@ -1,0 +1,5 @@
+package com.paymybuddy.backend.configuration;
+
+public class SecurityService {
+
+}

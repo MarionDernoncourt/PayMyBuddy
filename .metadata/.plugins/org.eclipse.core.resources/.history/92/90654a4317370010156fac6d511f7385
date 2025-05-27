@@ -1,0 +1,41 @@
+package com.paymybuddy.backend.service;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import com.paymybuddy.backend.model.User;
+import com.paymybuddy.backend.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
+
+@SpringBootTest
+public class UserServiceTest {
+
+	@Mock
+	private UserRepository userRepository;
+	@InjectMocks
+	private UserService userService;
+
+	@BeforeEach
+	public void setup() {
+	MockitoAnnotations.openMocks(this);
+	}
+
+	@Test
+	@Transactional
+	public void testAddFriendShouldPersistInJoinTable() {
+		userService.addFriends(user.getId(), friend.getEmail());
+
+		User updatedUser = userRepository.findById(user.getId()).orElseThrow();
+		User updatedFriend = userRepository.findById(friend.getId()).orElseThrow();
+
+		assertThat(updatedUser.getFriends()).contains(updatedFriend);
+		assertThat(updatedFriend.getFriendsOf()).contains(updatedUser);
+	}
+}

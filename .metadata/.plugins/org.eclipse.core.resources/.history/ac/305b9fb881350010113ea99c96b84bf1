@@ -1,0 +1,22 @@
+package com.paymybuddy.backend.service;
+
+import org.springframework.stereotype.Service;
+
+import com.paymybuddy.backend.repository.UserRepository;
+import com.paymybuddy.backend.security.JwtUtils;
+import com.paymybuddy.backend.security.PasswordUtils;
+
+@Service
+public class AuthService {
+	
+	private final UserRepository userRepository;
+	private final PasswordUtils passwordUtils;
+	private final JwtUtils jwtUtils;
+	
+	public authService (UserRepository userRepository, PasswordUtils passwordUtils, JwtUtils jwtUtils) {
+		this.userRepository = userRepository;
+		this.passwordUtils = passwordUtils;
+		this.jwtUtils = jwtUtils;
+	}
+
+}

@@ -1,0 +1,52 @@
+package com.paymybuddy.backend;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import com.paymybuddy.backend.service.TransactionService;
+import com.paymybuddy.backend.service.UserService;
+
+import jakarta.transaction.Transactional;
+
+@SpringBootApplication
+
+public class PayMyBuddyApplication implements CommandLineRunner {
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private TransactionService transactionService;
+
+	public static void main(String[] args) {
+		
+		System.out.println("chicaneur" + new BCryptPasswordEncoder().encode("chicaneur"));
+		System.out.println("lovegood" + new BCryptPasswordEncoder().encode("lovegood"));
+		System.out.println("buck" + new BCryptPasswordEncoder().encode("buck"));
+		System.out.println("dumbledor" + new BCryptPasswordEncoder().encode("dumbledor"));
+		System.out.println("endoloris" + new BCryptPasswordEncoder().encode("endoloris"));
+		System.out.println("pettigrow" + new BCryptPasswordEncoder().encode("pettigrow"));
+		System.out.println("123456" + new BCryptPasswordEncoder().encode("123456"));
+		System.out.println("nimbus3000" + new BCryptPasswordEncoder().encode("nimbus3000"));
+
+
+
+
+
+
+		
+		SpringApplication.run(PayMyBuddyApplication.class, args);
+	}
+
+	@Transactional
+	@Override
+	public void run(String... args) throws Exception {
+
+		
+		
+	}
+
+}

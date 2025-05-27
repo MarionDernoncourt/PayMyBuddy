@@ -1,0 +1,10 @@
+package com.paymybuddy.backend.dto;
+
+import java.math.BigDecimal;
+
+public class SendTransactionDTO {
+
+	private String description;
+	private BigDecimal amount;
+	private String receiverEmail;
+}

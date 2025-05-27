@@ -1,0 +1,22 @@
+package com.paymybuddy.backend.security;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+
+@Configuration
+@ConfigurationProperties(prefix = "jwt")
+public class JwtProperties {
+
+	@Value("${jwt.secret}")
+	private String secret;
+	
+	public void setSecret(String secret) {
+		this.secret = secret;
+	}
+
+	public String getSecret() {
+		return secret;
+	}
+}

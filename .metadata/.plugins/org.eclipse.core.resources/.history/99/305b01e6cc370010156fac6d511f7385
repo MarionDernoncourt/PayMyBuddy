@@ -1,0 +1,60 @@
+package com.paymybuddy.backend.service;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import com.paymybuddy.backend.dto.TransactionDTO;
+import com.paymybuddy.backend.model.Transaction;
+import com.paymybuddy.backend.model.User;
+import com.paymybuddy.backend.repository.TransactionRepository;
+import com.paymybuddy.backend.repository.UserRepository;
+
+@Service
+public class TransactionService {
+
+	private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
+
+	private UserRepository userRepository;
+	private TransactionRepository transactionRepository;
+
+	public TransactionService(UserRepository userRepository, TransactionRepository transactionRepository) {
+		this.userRepository = userRepository;
+		this.transactionRepository = transactionRepository;
+	}
+
+	public List<TransactionDTO> getUserTransactions(String username) {
+		logger.info("Tentative de récupération des transactions du user : {}", username);
+
+		User user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(() -> {
+			logger.warn("Utilisateur {} non trouvé", username);
+			return new IllegalArgumentException("Utilisateur non trouvé");
+		});
+
+		List<Transaction> transactions = transactionRepository.findBySenderOrReceiver(user, user);
+
+		List<TransactionDTO> transactionDTO = transactions.stream()
+				.map(transaction -> new TransactionDTO(transaction.getDescription(), transaction.getAmount(),
+						transaction.getSender().getEmail(), transaction.getReceiver().getEmail()))
+				.toList();
+
+		logger.info("Nombre de transactions trouvées : {}", transactionDTO.size());
+		return transactionDTO;
+	}
+
+	public TransactionDTO sendTransaction(TransactionDTO transactionDTO) {
+
+		String description = transactionDTO.getDescription();
+		BigDecimal amount = transactionDTO.getAmount();
+		String senderEmail = transactionDTO.getSenderEmail();
+		String receiverEmail = transactionDTO.getReceiverEmail();
+		
+		
+
+		return null;
+	}
+
+}

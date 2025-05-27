@@ -1,0 +1,6 @@
+package com.paymybuddy.backend.dto;
+
+public class FriendDTO {
+
+	private String email ;
+}
