@@ -1,0 +1,7 @@
+com\paymybuddy\backend\service\TransactionServiceTest.class
+com\paymybuddy\backend\PayMyBuddyApplicationTests.class
+com\paymybuddy\backend\controller\TransactionControllerIT.class
+com\paymybuddy\backend\service\AuthServiceTest.class
+com\paymybuddy\backend\controller\AuthControllerIT.class
+com\paymybuddy\backend\controller\UserControllerIT.class
+com\paymybuddy\backend\service\UserServiceTest.class

@@ -30,7 +30,7 @@ export default {
     async searchFriend() {
       try {
         const response = await axios.post(
-          "http://localhost:8081/api/users/friends",
+          "http://localhost:8081/api/users/addfriends",
           { email: this.email },
           {
             headers: {

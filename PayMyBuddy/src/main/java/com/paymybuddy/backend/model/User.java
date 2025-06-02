@@ -37,13 +37,6 @@ public class User {
 	@Column(name="account_balance", precision = 10, scale = 2)
 	private BigDecimal accountBalance = BigDecimal.ZERO;
 
-	public BigDecimal getAccountBalance() {
-		return accountBalance;
-	}
-
-	public void setAccountBalance(BigDecimal accountBalance) {
-		this.accountBalance = accountBalance;
-	}
 
 	@ManyToMany(
 			fetch = FetchType.LAZY, 
@@ -120,5 +113,12 @@ public class User {
 		this.friendsOf = friendsOf;
 	}
 
-	
+	public BigDecimal getAccountBalance() {
+		return accountBalance;
+	}
+
+	public void setAccountBalance(BigDecimal accountBalance) {
+		this.accountBalance = accountBalance;
+	}
+
 }

@@ -2,6 +2,7 @@ package com.paymybuddy.backend.controller;
 
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,20 @@ public class UserController {
 		this.userService = userService;
 	}
 
-	@PostMapping("/friends")
+	@GetMapping("/getFriends")
+	public ResponseEntity<List<FriendDTO>> getFriends(Principal principal) {
+		try {
+			String connectedUserUsername = principal.getName();
+
+			List<FriendDTO> friends = userService.getFriends(connectedUserUsername);
+
+			return ResponseEntity.status(HttpStatus.OK).body(friends);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+	}
+
+	@PostMapping("/addfriends")
 	public ResponseEntity<FriendDTO> addFriend(Principal principal, @RequestBody FriendDTO friend) {
 		try {
 			String connectedUserUsername = principal.getName();
