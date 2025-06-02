@@ -1,0 +1,129 @@
+package com.paymybuddy.backend.service;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.paymybuddy.backend.dto.TransactionDTO;
+import com.paymybuddy.backend.model.Transaction;
+import com.paymybuddy.backend.model.User;
+import com.paymybuddy.backend.repository.TransactionRepository;
+import com.paymybuddy.backend.repository.UserRepository;
+
+@ExtendWith(MockitoExtension.class)
+public class TransactionServiceTest {
+
+	@Mock
+	private TransactionRepository transactionRepository;
+	@Mock
+	private UserRepository userRepository;
+	@InjectMocks
+	private TransactionService transactionService;
+
+	private User sender;
+	private User receiver;
+	private Transaction transaction;
+	private TransactionDTO transactionDTO;
+
+	@BeforeEach
+	void setUp() {
+		sender = new User();
+		sender.setId(1);
+		sender.setUsername("sender");
+		sender.setEmail("sender@gmail.com");
+		sender.setAccountBalance(BigDecimal.valueOf(100.00));
+
+		receiver = new User();
+		receiver.setId(2);
+		receiver.setUsername("receiver");
+		receiver.setEmail("receiver@gmail.com");
+		receiver.setAccountBalance(BigDecimal.valueOf(20.00));
+
+		transaction = new Transaction();
+		transaction.setDescription("Test transaction");
+		transaction.setAmount(BigDecimal.valueOf(50.00));
+		transaction.setSender(sender);
+		transaction.setReceiver(receiver);
+
+		transactionDTO = new TransactionDTO();
+		transactionDTO.setSenderEmail("sender@gmail.com");
+		transactionDTO.setReceiverEmail("receiver@gmail.com");
+		transactionDTO.setAmount(BigDecimal.valueOf(20.00));
+		transactionDTO.setDescription("Lunch payment");
+	}
+
+	@Test
+	public void testGetUserTransactions() {
+
+		when(userRepository.findByUsernameIgnoreCase("sender")).thenReturn(Optional.of(sender));
+		when(transactionRepository.findBySenderOrReceiver(any(User.class), any(User.class)))
+				.thenReturn(List.of(transaction));
+
+		List<TransactionDTO> result = transactionService.getUserTransactions("sender");
+
+		assertNotNull(result);
+		assertEquals(1, result.size());
+		assertEquals("Test transaction", result.get(0).getDescription());
+	}
+
+	@Test
+	public void testSendTransaction() {
+		String connectedUserUsername = "sender";
+		BigDecimal amount = BigDecimal.valueOf(20.00);
+
+		when(userRepository.findByUsernameIgnoreCase(connectedUserUsername)).thenReturn(Optional.of(sender));
+		when(userRepository.findByEmailIgnoreCase(receiver.getEmail())).thenReturn(Optional.of(receiver));
+
+		Transaction savedTransaction = new Transaction();
+		savedTransaction.setAmount(amount);
+		savedTransaction.setDescription("Lunch Payment");
+		savedTransaction.setSender(sender);
+		savedTransaction.setReceiver(receiver);
+
+		when(transactionRepository.save(any(Transaction.class))).thenReturn(savedTransaction);
+
+		TransactionDTO result = transactionService.sendTransaction(connectedUserUsername, transactionDTO);
+
+		assertNotNull(result);
+		assertEquals("Lunch Payment", result.getDescription());
+
+		assertEquals(BigDecimal.valueOf(80.00), sender.getAccountBalance());
+		assertEquals(BigDecimal.valueOf(40.00), receiver.getAccountBalance());
+
+	}
+
+	@Test
+	public void testSendTransaction_userNotFount() {
+		when(userRepository.findByUsernameIgnoreCase("sender")).thenReturn(Optional.of(sender));
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			transactionService.sendTransaction("sender", transactionDTO);
+		});
+	}
+
+	@Test
+	public void testSendTransaction_insufficientBalance() {
+		sender.setAccountBalance(BigDecimal.valueOf(10.00));
+		when(userRepository.findByUsernameIgnoreCase("sender")).thenReturn(Optional.of(sender));
+		when(userRepository.findByEmailIgnoreCase("receiver@gmail.com")).thenReturn(Optional.of(receiver));
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			transactionService.sendTransaction("sender", transactionDTO);
+		});
+	}
+	
+	
+}
