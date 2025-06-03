@@ -1,26 +1,30 @@
 <template>
+  <div class="header">
     <div class="title">
-        <p >Pay My Buddy</p>
-        <nav class="nav-links">
-            <router-link to="transfer">Transferer</router-link>
-            <router-link to="addFriend">Ajouter relation</router-link>
-            <router-link to="editProfile">Profil</router-link>
-            <a @click.prevent="logout" href="#">Se déconnecter</a>
-        </nav>
+      <p>Pay My Buddy</p>
+      <nav class="nav-links">
+        <router-link to="transfer">Transferer</router-link>
+        <router-link to="edit-profile">Profil</router-link>
+        <router-link to="addFriend">Ajouter relation</router-link>
+        <a @click.prevent="logout" href="#">Se déconnecter</a>
+      </nav>
     </div>
+  </div>
 </template>
 
 <script>
 
 export default {
-    name: "headerComponent",
-    methods: {
-        logout() {
-            localStorage.removeItem("token")
-            localStorage.removeItem("tokenExpiresAt")
-            this.$router.push("/login")
-        }
+  name: "headerComponent",
+  methods: {
+    logout() {
+      localStorage.removeItem("token")
+      localStorage.removeItem("tokenExpiresAt")
+      localStorage.removeItem("email")
+
+      this.$router.push("/login")
     }
+  }
 }
 </script>
 
@@ -31,6 +35,7 @@ export default {
   left: 0;
   right: 0;
   height: 60px;
+  background-color: white;
 
   display: flex;
   justify-content: space-between;
@@ -48,6 +53,7 @@ export default {
 }
 
 .nav-links a {
+  color: black;
   text-decoration: none;
   font-weight: 500;
   cursor: pointer;
@@ -55,5 +61,6 @@ export default {
 
 .nav-links a:hover {
   text-decoration: none;
+  font-weight: 600;
 }
 </style>

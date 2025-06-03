@@ -1,7 +1,8 @@
 <template>
+  <div class="page-wrapper">
   <div class="transfer-container">
 
-    <p><strong>Solde :</strong> {{ balance }} €</p>
+    <p class="balance"><strong>Solde :</strong> {{ balance }} €</p>
 
     <form @submit.prevent="sendMoney" class="transfer-form">
       <select id="friend" v-model="selectedFriendEmail" required>
@@ -15,7 +16,7 @@
 
       <input id="amount" v-model.number="amount" type="number" min="0.01" step="0.01" placeholder="0€" />
 
-      <button type="submit">Payer</button>
+      <button class="pay-button" type="submit">Payer</button>
     </form>
 
     <p v-if="message" :class="{ error: isError }">{{ message }}</p>
@@ -39,6 +40,7 @@
       </tbody>
     </table>
     <p v-else>Aucune transaction pour l’instant.</p>
+  </div>
   </div>
 </template>
 
@@ -175,21 +177,69 @@ this.transactions = res.data;
 
 <style>
 
-.transfer-container {
-  height: 100vh;
-  padding: 0px 50px;
+.page-wrapper {
+  margin-top: 100px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+  min-height: 100vh; /* prend toute la hauteur de la fenêtre */
+}
+
+.transfer-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.balance {
+  width: 80%;
+  margin: auto;
+  margin-bottom: 20px;
 }
 .transfer-form {
+  width: 80%;
+  height: 15vh;
+  margin: auto;
+  margin-bottom: 80px;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
+  justify-content: space-between;
+}
+#friend {
+margin: 10px;
+padding: 10px;
+border: 1px solid #ccc;
+width: 30%;
+}
+#description {
+border : 1px solid #ccc;
+width: 30%;
+}
+#amount {
+  border : 1px solid #ccc;
+  width: 10%;
+}
+.pay-button {
+  font-size: 15px;
+}
 
-  width: 100%;
-  height: 25%;
+table {
+  width: 80%;
+  margin:  auto;
+  padding: 20px; 
+  border: 1px solid #ccc;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+thead h2 {
+  margin-bottom: 10px;
+}
+
+thead th {
+  font-weight: bold;
 }
 </style>

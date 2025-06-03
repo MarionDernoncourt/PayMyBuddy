@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.paymybuddy.backend.dto.FriendDTO;
+import com.paymybuddy.backend.dto.ProfilDTO;
+import com.paymybuddy.backend.dto.UpdateProfilDTO;
+import com.paymybuddy.backend.dto.UpdateProfilResponseDTO;
 import com.paymybuddy.backend.dto.UsernameDTO;
 import com.paymybuddy.backend.service.UserService;
 
@@ -81,6 +84,31 @@ public class UserController {
 		} catch (SecurityException e) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
+	}
+
+	@GetMapping("/profil")
+	public ResponseEntity<ProfilDTO> getUserProfil(Principal principal) {
+		try {
+			String connectedUserUsername = principal.getName();
+			ProfilDTO userProfil = userService.getUserProfil(connectedUserUsername);
+			return ResponseEntity.status(HttpStatus.OK).body(userProfil);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+	}
+	
+		@PostMapping("/updateProfil")
+		public ResponseEntity<UpdateProfilResponseDTO> updateUserProfil(Principal principal, @RequestBody UpdateProfilDTO updateProfil) {
+			try {
+				String connectedUsername = principal.getName()	;
+				System.err.println(connectedUsername);
+				UpdateProfilResponseDTO updatedProfil = userService.updateUserProfil(connectedUsername, updateProfil);
+				return ResponseEntity.status(HttpStatus.OK).body(updatedProfil);
+			} catch (IllegalArgumentException e) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()	;
+			}
+			
+		
 	}
 
 }
