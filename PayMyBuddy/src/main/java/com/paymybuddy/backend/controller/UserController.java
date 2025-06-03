@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.paymybuddy.backend.dto.FriendDTO;
+import com.paymybuddy.backend.dto.UsernameDTO;
 import com.paymybuddy.backend.service.UserService;
 
 @RestController
@@ -28,12 +29,12 @@ public class UserController {
 	}
 
 	@GetMapping("/getFriends")
-	public ResponseEntity<List<FriendDTO>> getFriends(Principal principal) {
+	public ResponseEntity<List<UsernameDTO>> getFriends(Principal principal) {
 		try {
 			String connectedUserUsername = principal.getName();
 
-			List<FriendDTO> friends = userService.getFriends(connectedUserUsername);
-
+			List<UsernameDTO> friends = userService.getFriends(connectedUserUsername);
+			System.out.println(friends);
 			return ResponseEntity.status(HttpStatus.OK).body(friends);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

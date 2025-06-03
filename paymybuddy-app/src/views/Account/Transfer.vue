@@ -6,8 +6,8 @@
     <form @submit.prevent="sendMoney" class="transfer-form">
       <select id="friend" v-model="selectedFriendEmail" required>
         <option disabled value="">Sélectionner une relation</option>
-        <option v-for="friend in friends" :key="friend.email" :value="friend.email">
-          {{ friend.email }}
+        <option v-for="friend in friends" :key="friend.username" :value="friend.username">
+          {{ friend.username }}
         </option>
       </select>
 
@@ -20,22 +20,21 @@
 
     <p v-if="message" :class="{ error: isError }">{{ message }}</p>
 
-    <h3>Historique des transactions</h3>
+
     <table v-if="transactions.length">
       <thead>
+        <h2>Mes transactions</h2>
         <tr>
-          <th>Date</th>
-          <th>Vers</th>
+          <th>Relation</th>
           <th>Description</th>
-          <th>Montant (€)</th>
+          <th>Montant</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="txn in transactions" :key="txn.id">
-          <td>{{ new Date(txn.date).toLocaleDateString() }}</td>
-          <td>{{ txn.recipientEmail }}</td>
+          <td>{{ txn.receiverUsername }}</td>
           <td>{{ txn.description }}</td>
-          <td>{{ txn.amount.toFixed(2) }}</td>
+          <td>{{ txn.amount }}</td>
         </tr>
       </tbody>
     </table>
@@ -65,22 +64,34 @@ export default {
   created() {
     this.fetchBalance();
     this.fetchFriends();
+    this.fetchTransactions();
   },
   methods: {
-
+    fetchTransactions() {
+      axios.get("http://localhost:8081/api/transactions/", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      })
+        .then(res => {
+          console.log(res.data);
+this.transactions = res.data;
+        });
+    },
     fetchBalance() {
 
       axios.get('http://localhost:8081/api/users/account',
-         {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
-              'Content-Type': 'application/json'  // optionnel mais conseillé
-            },
-            withCredentials: true
-          }
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
+        }
       )
-        .then(res => {          
-          console.log(res.data);
+        .then(res => {
           this.balance = res.data;
         })
         .catch(() => {
@@ -89,13 +100,13 @@ export default {
         });
     },
     fetchFriends() {
-      axios.get('http://localhost:8081/api/users/getFriends',   {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
-              'Content-Type': 'application/json'  // optionnel mais conseillé
-            },
-            withCredentials: true
-          })
+      axios.get('http://localhost:8081/api/users/getFriends', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      })
         .then(res => {
           this.friends = res.data;
         })
@@ -125,12 +136,22 @@ export default {
       }
 
       const payload = {
-        friendEmail: this.selectedFriendEmail,
-        amount: this.amount,
+
         description: this.description,
+        amount: this.amount,
+        senderEmail: localStorage.getItem("email"),
+        receiverUsername: this.selectedFriendEmail,
       };
 
-      axios.post('/api/transaction/transactions', payload)
+      console.log("payload : " , payload);
+      axios.post('http://localhost:8081/api/transactions/transaction', payload,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
+        })
         .then(() => {
           this.message = "Transfert effecuté avec succès";
           this.isError = false;
@@ -151,3 +172,24 @@ export default {
   },
 };
 </script>
+
+<style>
+
+.transfer-container {
+  height: 100vh;
+  padding: 0px 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+.transfer-form {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+
+  width: 100%;
+  height: 25%;
+}
+</style>

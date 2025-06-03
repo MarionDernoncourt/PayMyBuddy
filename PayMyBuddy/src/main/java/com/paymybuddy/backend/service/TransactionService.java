@@ -7,10 +7,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.paymybuddy.backend.dto.SendTransactionDTO;
 import com.paymybuddy.backend.dto.TransactionDTO;
 import com.paymybuddy.backend.model.Transaction;
 import com.paymybuddy.backend.model.User;
-import com.paymybuddy.backend.repository.TransactionRepository;
+import com.paymybuddy.backend
+.repository.TransactionRepository;
 import com.paymybuddy.backend.repository.UserRepository;
 
 @Service
@@ -20,16 +22,14 @@ public class TransactionService {
 
 	private UserRepository userRepository;
 	private TransactionRepository transactionRepository;
-	private UserService userService;
-
+	
 	public TransactionService(UserRepository userRepository, TransactionRepository transactionRepository,
 			UserService userService) {
 		this.userRepository = userRepository;
 		this.transactionRepository = transactionRepository;
-		this.userService = userService;
 	}
 
-	public List<TransactionDTO> getUserTransactions(String username) {
+	public List<TransactionDTO> getReceivedTransactions(String username) {
 		logger.info("Tentative de récupération des transactions du user : {}", username);
 
 		User user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(() -> {
@@ -37,33 +37,33 @@ public class TransactionService {
 			return new IllegalArgumentException("Utilisateur non trouvé");
 		});
 
-		List<Transaction> transactions = transactionRepository.findBySenderOrReceiver(user, user);
+		List<Transaction> transactions = transactionRepository.findBySender(user);
 
 		List<TransactionDTO> transactionDTO = transactions.stream()
 				.map(transaction -> new TransactionDTO(transaction.getDescription(), transaction.getAmount(),
-						transaction.getSender().getEmail(), transaction.getReceiver().getEmail()))
+						transaction.getReceiver().getUsername()))
 				.toList();
 
 		logger.info("Nombre de transactions trouvées : {}", transactionDTO.size());
 		return transactionDTO;
 	}
 
-	public TransactionDTO sendTransaction(String connectedUserUsername, TransactionDTO transactionDTO) {
+	public SendTransactionDTO sendTransaction(String connectedUserUsername, SendTransactionDTO transactionDTO) {
 		logger.info("Tentative de création d'une transaction de {} à {}", transactionDTO.getSenderEmail(),
-				transactionDTO.getReceiverEmail());
+				transactionDTO.getReceiverUsername());
 
 		User senderUser = userRepository.findByUsernameIgnoreCase(connectedUserUsername)
 				.orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
-
-		User receiverUser = userRepository.findByEmailIgnoreCase(transactionDTO.getReceiverEmail())
+		
+User receiverUser = userRepository.findByUsernameIgnoreCase(transactionDTO.getReceiverUsername())
 				.orElseThrow(() -> new IllegalArgumentException("Destinataire non trouvé"));
-
-		if (!senderUser.getEmail().equalsIgnoreCase(transactionDTO.getSenderEmail())) {
+		
+if (!senderUser.getEmail().equalsIgnoreCase(transactionDTO.getSenderEmail())) {
 			logger.warn("L'utilisateur connecté ({}) n'est pas l'expéditeur({})", connectedUserUsername,
 					transactionDTO.getSenderEmail());
 			throw new IllegalArgumentException("L'utilisateur connecté n'est pas l'expéditeur");
 		}
-		if (senderUser.getUsername().equalsIgnoreCase(receiverUser.getEmail())) {
+		if (senderUser.getUsername().equalsIgnoreCase(receiverUser.getUsername())) {
 			logger.warn("Echec de la transaction : Expéditeur identique à au destinataire : {}",
 					transactionDTO.getSenderEmail());
 			throw new IllegalArgumentException("Vous ne pouvez pas vous envoyer de l'argent à vous meme");
@@ -76,10 +76,10 @@ public class TransactionService {
 		Transaction transaction = createTransaction(senderUser, receiverUser, transactionDTO.getAmount(),
 				transactionDTO.getDescription());
 
-		logger.info("Montant transféré : {}€ de {} à {}", transaction.getAmount(), senderUser.getEmail(),
-				receiverUser.getEmail());
+		logger.info("Montant transféré : {}€ de {} à {}", transaction.getAmount(), senderUser.getUsername(),
+				receiverUser.getUsername());
 		logger.info("Transaction effectuée avec succès");
-		return mapToTransactionDTO(transaction);
+		return mapToSendTransactionDTO(transaction);
 	}
 
 	private void validateBalance(User senderUser, BigDecimal amount) {
@@ -109,9 +109,9 @@ public class TransactionService {
 		return transactionRepository.save(transaction);
 	}
 
-	private TransactionDTO mapToTransactionDTO(Transaction transaction) {
-		return new TransactionDTO(transaction.getDescription(), transaction.getAmount(),
-				transaction.getSender().getEmail(), transaction.getReceiver().getEmail());
+	private SendTransactionDTO mapToSendTransactionDTO(Transaction transaction) {
+		return new SendTransactionDTO(transaction.getDescription(), transaction.getAmount(),
+				transaction.getSender().getUsername(), transaction.getReceiver().getUsername());
 	}
 
 }

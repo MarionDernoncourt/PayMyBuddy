@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.paymybuddy.backend.dto.FriendDTO;
+import com.paymybuddy.backend.dto.UsernameDTO;
 import com.paymybuddy.backend.model.User;
 import com.paymybuddy.backend.repository.UserRepository;
 
@@ -25,17 +26,17 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 	
-	public List<FriendDTO> getFriends(String username) {
+	public List<UsernameDTO> getFriends(String username) {
 		logger.info("Entrée dans getFriends");
 		
 		List<User> friends = userRepository.findFriendsByUsername(username);
 		
 		
-		List<FriendDTO> friendsDTO = friends.stream()
-				.map(friend -> new FriendDTO(friend.getEmail())).collect(Collectors.toList());
+		List<UsernameDTO> usernames = friends.stream()
+				.map(friend -> new UsernameDTO(friend.getUsername())).collect(Collectors.toList());
 		
 				
-		return friendsDTO;
+		return usernames;
 		
 	}
 

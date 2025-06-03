@@ -35,7 +35,9 @@ export default {
           localStorage.setItem('token', token)
           const delay = 60 * 60 * 1000;
           localStorage.setItem('tokenExpiresAt', Date.now() + delay);
+          localStorage.setItem('email', this.email);
           console.log("Connexion réussie :", response.data)
+
           this.$router.push('/transfer')
         })
         .catch(error => {

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.paymybuddy.backend.dto.SendTransactionDTO;
 import com.paymybuddy.backend.dto.TransactionDTO;
 import com.paymybuddy.backend.service.TransactionService;
 
@@ -23,10 +24,10 @@ public class TransactionController {
 	private TransactionService transactionService;
 
 	@GetMapping("/")
-	public ResponseEntity<List<TransactionDTO>> getUserTransactions(Principal principal) {
+	public ResponseEntity<List<TransactionDTO>> getReceivedTransactions(Principal principal) {
 		try {
 			String connectedUserUsername = principal.getName();
-			List<TransactionDTO> transactions = transactionService.getUserTransactions(connectedUserUsername);
+			List<TransactionDTO> transactions = transactionService.getReceivedTransactions(connectedUserUsername);
 			return ResponseEntity.status(HttpStatus.OK).body(transactions);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -36,11 +37,12 @@ public class TransactionController {
 	}
 
 	@PostMapping("/transaction")
-	public ResponseEntity<TransactionDTO> sendTransaction(Principal principal,
-			@RequestBody TransactionDTO transactionDTO) {
+	public ResponseEntity<SendTransactionDTO> sendTransaction(Principal principal,
+			@RequestBody SendTransactionDTO transactionDTO) {
 		try {
 			String connectedUserUsername = principal.getName();
-			TransactionDTO transaction = transactionService.sendTransaction(connectedUserUsername, transactionDTO);
+			
+			SendTransactionDTO transaction = transactionService.sendTransaction(connectedUserUsername, transactionDTO);
 			return ResponseEntity.status(HttpStatus.OK).body(transaction);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

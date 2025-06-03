@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.paymybuddy.backend.dto.SendTransactionDTO;
 import com.paymybuddy.backend.dto.TransactionDTO;
 import com.paymybuddy.backend.model.Transaction;
 import com.paymybuddy.backend.model.User;
@@ -36,7 +37,7 @@ public class TransactionServiceTest {
 	private User sender;
 	private User receiver;
 	private Transaction transaction;
-	private TransactionDTO transactionDTO;
+	private SendTransactionDTO transactionDTO;
 
 	@BeforeEach
 	void setUp() {
@@ -58,9 +59,9 @@ public class TransactionServiceTest {
 		transaction.setSender(sender);
 		transaction.setReceiver(receiver);
 
-		transactionDTO = new TransactionDTO();
+		transactionDTO = new SendTransactionDTO();
 		transactionDTO.setSenderEmail("sender@gmail.com");
-		transactionDTO.setReceiverEmail("receiver@gmail.com");
+		transactionDTO.setReceiverUsername("receiver");
 		transactionDTO.setAmount(BigDecimal.valueOf(20.00));
 		transactionDTO.setDescription("Lunch payment");
 	}
@@ -69,10 +70,10 @@ public class TransactionServiceTest {
 	public void testGetUserTransactions() {
 
 		when(userRepository.findByUsernameIgnoreCase("sender")).thenReturn(Optional.of(sender));
-		when(transactionRepository.findBySenderOrReceiver(any(User.class), any(User.class)))
+		when(transactionRepository.findBySender(any(User.class)))
 				.thenReturn(List.of(transaction));
 
-		List<TransactionDTO> result = transactionService.getUserTransactions("sender");
+		List<TransactionDTO> result = transactionService.getReceivedTransactions("sender");
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
@@ -85,7 +86,7 @@ public class TransactionServiceTest {
 		BigDecimal amount = BigDecimal.valueOf(20.00);
 
 		when(userRepository.findByUsernameIgnoreCase(connectedUserUsername)).thenReturn(Optional.of(sender));
-		when(userRepository.findByEmailIgnoreCase(receiver.getEmail())).thenReturn(Optional.of(receiver));
+		when(userRepository.findByUsernameIgnoreCase("receiver")).thenReturn(Optional.of(receiver));
 
 		Transaction savedTransaction = new Transaction();
 		savedTransaction.setAmount(amount);
@@ -95,7 +96,7 @@ public class TransactionServiceTest {
 
 		when(transactionRepository.save(any(Transaction.class))).thenReturn(savedTransaction);
 
-		TransactionDTO result = transactionService.sendTransaction(connectedUserUsername, transactionDTO);
+		SendTransactionDTO result = transactionService.sendTransaction(connectedUserUsername, transactionDTO);
 
 		assertNotNull(result);
 		assertEquals("Lunch Payment", result.getDescription());
@@ -118,7 +119,6 @@ public class TransactionServiceTest {
 	public void testSendTransaction_insufficientBalance() {
 		sender.setAccountBalance(BigDecimal.valueOf(10.00));
 		when(userRepository.findByUsernameIgnoreCase("sender")).thenReturn(Optional.of(sender));
-		when(userRepository.findByEmailIgnoreCase("receiver@gmail.com")).thenReturn(Optional.of(receiver));
 
 		assertThrows(IllegalArgumentException.class, () -> {
 			transactionService.sendTransaction("sender", transactionDTO);

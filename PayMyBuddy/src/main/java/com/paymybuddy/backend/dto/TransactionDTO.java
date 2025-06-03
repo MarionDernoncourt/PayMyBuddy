@@ -5,13 +5,12 @@ import java.math.BigDecimal;
 
 public class TransactionDTO {
 
-	public TransactionDTO(String description, BigDecimal amount,  String senderEmail,
-	 String receiverEmail) {
+	public TransactionDTO(String description, BigDecimal amount,  String receiverUsername) {
 		
 		this.description = description;
 		this.amount = amount;
-		this.senderEmail = senderEmail;
-		this.receiverEmail = receiverEmail;
+		
+		this.receiverUsername = receiverUsername;
 	}
 	
 	public TransactionDTO() {
@@ -20,8 +19,7 @@ public class TransactionDTO {
 
 	private String description;
 	private BigDecimal amount;
-	private String senderEmail;
-	private String receiverEmail;
+	private String receiverUsername;
 	
 	
 	
@@ -31,6 +29,7 @@ public class TransactionDTO {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
 	public BigDecimal getAmount() {
 		return amount;
 	}
@@ -38,18 +37,12 @@ public class TransactionDTO {
 		this.amount = amount;
 	}
 	
-	public String getSenderEmail() {
-		return senderEmail;
-	}
-	public void setSenderEmail(String senderEmail) {
-		this.senderEmail = senderEmail;
-	}
 	
-	public String getReceiverEmail() {
-		return receiverEmail;
+	public String getreceiverUsername() {
+		return receiverUsername;
 	}
-	public void setReceiverEmail(String receiverEmail) {
-		this.receiverEmail = receiverEmail;
+	public void setreceiverUsername(String receiverEmail) {
+		this.receiverUsername = receiverEmail;
 	}
 	
 }
