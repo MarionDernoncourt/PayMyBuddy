@@ -1,12 +1,12 @@
 INSERT INTO users (username, email, password) 
 VALUES
-("Harry", "hpotter@gryffondor.com", "nimbus3000"),
-("Hermione", "hermione@gryffondor.com", "123456"),
-("Ron", "ron@gryffondor.com", "pettigrow"),
-("Drago", "dmalefoy@serpentar.com", "endoloris"),
-("McGonagall", "mcgonagall@poudlard.com", "dumbledor"),
-("Hagrid", "hagrid@poudlard.com", "buck"), 
-("Neuville", "nlondubat@gryffondor.com", "lovegood");
+("Harry", "hpotter@gryffondor.com", "$2a$10$$2a$10$EPPwnWtHeGmqEoacUlW9JuN2GdNvHBvnJpBXpF24ZEWr.zkH1tUQi"),
+("Hermione", "hermione@gryffondor.com", "$2a$10$sTkvPcIhWyRTvCY2K3RDVetpmgCxWCvK5qDJqei8AfzsRwHIRVywm"),
+("Ron", "ron@gryffondor.com", "$2a$10$y3odJkQg8U4i4jyeH9KK9edlxsox9gjbJoU99WIYZixgRaVY0uWvC"),
+("Drago", "dmalefoy@serpentar.com", "$2a$10$BpjIyrRYWXZ8dOYF4haZEuCsCQh0859gWBKtUZlti7wXrG409Yk6."),
+("McGonagall", "mcgonagall@poudlard.com", "$2a$10$bTfsGTDQPi3py.7LS/JXqehnZMvK0hBVTSdCFwSFYtjHLxu4M8.zK"),
+("Hagrid", "hagrid@poudlard.com", "$2a$10$RopEqh86cXIiUmSvr4knRe046M1V/ORokHJVOBtVeYR6dLwW7QqiC"), 
+("Neuville", "nlondubat@gryffondor.com", "$2a$10$qtE2vLPAQ14MhQIzi/OamuXezliubAKNDwg3bBYmzgwsMgDxJK2tC");
 
 INSERT INTO user_user (user_id, connected_user_id) 
 VALUES 

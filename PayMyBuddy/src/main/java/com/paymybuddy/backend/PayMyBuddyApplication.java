@@ -23,15 +23,6 @@ public class PayMyBuddyApplication implements CommandLineRunner {
 
 	public static void main(String[] args) {
 		
-		
-		System.out.println("nimbus3000" + new BCryptPasswordEncoder().encode("johnjohn"));
-
-
-
-
-
-
-		
 		SpringApplication.run(PayMyBuddyApplication.class, args);
 	}
 
