@@ -6,7 +6,7 @@
 
       <div class="add-funds-container">
         <p class="addFunds">Alimenter mon compte</p>
-      <button @click="addFunds" class="add-funds-button">+50€</button>
+        <button @click="addFunds" class="add-funds-button">+50€</button>
       </div>
 
       <form @submit.prevent="sendMoney" class="transfer-form">
@@ -27,24 +27,27 @@
       <p v-if="message" :class="{ error: isError }">{{ message }}</p>
 
 
-      <table v-if="transactions.length">
-        <thead>
-          <h2>Mes transactions</h2>
-          <tr>
-            <th>Relation</th>
-            <th>Description</th>
-            <th>Montant</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="txn in transactions" :key="txn.id">
-            <td>{{ txn.receiverUsername }}</td>
-            <td>{{ txn.description }}</td>
-            <td>{{ txn.amount }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <p v-else>Aucune transaction pour l’instant.</p>
+      <div class="transaction-container">
+        <h2>Mes transactions</h2>
+
+        <table v-if="transactions.length">
+          <thead>
+            <tr>
+              <th>Relation</th>
+              <th>Description</th>
+              <th>Montant</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="txn in transactions" :key="txn.id">
+              <td>{{ txn.receiverUsername }}</td>
+              <td>{{ txn.description }}</td>
+              <td>{{ txn.amount }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <p v-else>Aucune transaction pour l’instant.</p>
+      </div>
     </div>
   </div>
 </template>
@@ -160,10 +163,11 @@ export default {
         })
         .then(() => {
           this.message = "Transfert effecuté avec succès";
-          this.fetchTransactions;
+          this.fetchTransactions
           this.isError = false;
 
           this.fetchBalance();
+          this.fetchTransactions();
 
           this.selectedFriendEmail = "";
           this.amount = null;
@@ -260,18 +264,25 @@ export default {
   justify-content: flex-start;
   align-items: center;
 }
+
 .add-funds-container button {
-font-size: 12px;
-background-color: #F69F1D;
-border: 1px solid #F69F1D;
+  font-size: 12px;
+  background-color: #F69F1D;
+  border: 1px solid #F69F1D;
 }
 
-table {
+.transaction-container {
+  border: 1px solid #ccc;
   width: 80%;
   margin: auto;
-  margin-bottom: 30px;
   padding: 20px;
-  border: 1px solid #ccc;
+    margin-bottom: 30px;
+
+}
+table {
+  width: 100%;
+  margin: auto;
+  padding: 20px;
 }
 
 th,

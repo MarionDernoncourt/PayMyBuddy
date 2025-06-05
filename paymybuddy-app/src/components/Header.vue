@@ -22,6 +22,7 @@ export default {
       localStorage.removeItem("tokenExpiresAt")
       localStorage.removeItem("email")
 
+      this.$emit('logout'); // notification vers App.vue
       this.$router.push("/login")
     }
   }

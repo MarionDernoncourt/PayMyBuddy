@@ -3537,3 +3537,5 @@
 2025-06-05 11:29:07,903 [Worker-68: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\mario\Desktop\Formation Openclassrooms\Developpeur_application_JAVA\Projet_6\Pay_My_Buddy\PayMyBuddy\PayMyBuddy\src\test\resources
 2025-06-05 11:30:03,970 [Worker-73: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 4 resources from src\main\resources to target\classes
 2025-06-05 11:30:03,984 [Worker-73: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\mario\Desktop\Formation Openclassrooms\Developpeur_application_JAVA\Projet_6\Pay_My_Buddy\PayMyBuddy\PayMyBuddy\src\test\resources
+2025-06-05 11:37:32,292 [Worker-69: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 4 resources from src\main\resources to target\classes
+2025-06-05 11:37:33,034 [Worker-69: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\mario\Desktop\Formation Openclassrooms\Developpeur_application_JAVA\Projet_6\Pay_My_Buddy\PayMyBuddy\PayMyBuddy\src\test\resources

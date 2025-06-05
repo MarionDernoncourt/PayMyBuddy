@@ -6,9 +6,9 @@
         <div class="input-container"> <input type="username" id="username" placeholder="Username" v-model="username"
             required />
 
-          <input type="email" id="email" placeholder="email" required />
+          <input type="email" id="email" placeholder="email" v-model="email" required />
 
-          <input type="password" id="password" placeholder="password" required />
+          <input type="password" id="password" placeholder="password" v-model="password" required />
 
         </div>
         <button type="submit">S'inscrire</button>

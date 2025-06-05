@@ -38,6 +38,7 @@ export default {
           localStorage.setItem('email', this.email);
           console.log("Connexion réussie :", response.data)
 
+          this.$emit('login');
           this.$router.push('/transfer')
         })
         .catch(error => {

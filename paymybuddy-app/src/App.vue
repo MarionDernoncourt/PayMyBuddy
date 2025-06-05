@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <headerComponent v-if="isLogged"   />
+    <headerComponent v-if="isLogged"  @logout="onLogout"  />
     <div class="main-container">
-      <router-view />
+      <router-view @login="onLogin" />
     </div>
 
   </div>
@@ -13,9 +13,17 @@ import headerComponent from "@/components/Header.vue"
 
 export default {
   components: { headerComponent },
-  computed: {
-    isLogged() {
-      return localStorage.getItem("token")
+  data() {
+    return {
+      isLogged: !!localStorage.getItem("token") // pour le 1er chargement
+    };
+  },
+  methods: {
+onLogin() {
+        this.isLogged = true; // après Login
+    },
+     onLogout() {
+      this.isLogged = false; // après logout
     }
   }
 }
