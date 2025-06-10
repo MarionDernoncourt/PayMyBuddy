@@ -11,11 +11,11 @@ public class SendTransactionDTO {
 
 	public SendTransactionDTO() {};
 	
-	public SendTransactionDTO(String description, BigDecimal amount, String senderUsername, String receiverUsername) {
+	public SendTransactionDTO(String description, BigDecimal amount, String senderEmail, String receiverUsername) {
 		super();
 		this.description = description;
 		this.amount = amount;
-		this.senderEmail = senderUsername;
+		this.senderEmail = senderEmail;
 		this.receiverUsername = receiverUsername;
 	}
 	public String getDescription() {
@@ -33,8 +33,8 @@ public class SendTransactionDTO {
 	public String getSenderEmail() {
 		return senderEmail;
 	}
-	public void setSenderEmail(String senderUsername) {
-		this.senderEmail = senderUsername;
+	public void setSenderEmail(String senderEmail) {
+		this.senderEmail = senderEmail;
 	}
 	public String getReceiverUsername() {
 		return receiverUsername;

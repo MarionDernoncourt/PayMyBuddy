@@ -111,7 +111,7 @@ if (!senderUser.getEmail().equalsIgnoreCase(transactionDTO.getSenderEmail())) {
 
 	private SendTransactionDTO mapToSendTransactionDTO(Transaction transaction) {
 		return new SendTransactionDTO(transaction.getDescription(), transaction.getAmount(),
-				transaction.getSender().getUsername(), transaction.getReceiver().getUsername());
+				transaction.getSender().getEmail(), transaction.getReceiver().getUsername());
 	}
 
 }

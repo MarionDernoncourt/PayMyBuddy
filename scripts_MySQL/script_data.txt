@@ -1,6 +1,6 @@
 INSERT INTO users (username, email, password) 
 VALUES
-("Harry", "hpotter@gryffondor.com", "$2a$10$$2a$10$EPPwnWtHeGmqEoacUlW9JuN2GdNvHBvnJpBXpF24ZEWr.zkH1tUQi"),
+("Harry", "hpotter@gryffondor.com", "$2a$10$EPPwnWtHeGmqEoacUlW9JuN2GdNvHBvnJpBXpF24ZEWr.zkH1tUQi"),
 ("Hermione", "hermione@gryffondor.com", "$2a$10$sTkvPcIhWyRTvCY2K3RDVetpmgCxWCvK5qDJqei8AfzsRwHIRVywm"),
 ("Ron", "ron@gryffondor.com", "$2a$10$y3odJkQg8U4i4jyeH9KK9edlxsox9gjbJoU99WIYZixgRaVY0uWvC"),
 ("Drago", "dmalefoy@serpentar.com", "$2a$10$BpjIyrRYWXZ8dOYF4haZEuCsCQh0859gWBKtUZlti7wXrG409Yk6."),

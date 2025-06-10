@@ -3,14 +3,14 @@ package com.paymybuddy.backend.controller;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;import java.lang.foreign.ValueLayout;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.math.BigDecimal;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +22,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
@@ -32,8 +31,6 @@ import com.paymybuddy.backend.dto.FriendDTO;
 import com.paymybuddy.backend.dto.ProfilDTO;
 import com.paymybuddy.backend.dto.UpdateProfilDTO;
 import com.paymybuddy.backend.dto.UpdateProfilResponseDTO;
-import com.paymybuddy.backend.model.User;
-import com.paymybuddy.backend.repository.UserRepository;
 import com.paymybuddy.backend.service.UserService;
 
 @SpringBootTest
@@ -57,6 +54,8 @@ public class UserControllerIT {
 
 		when(jwtDecoder.decode("mock-token")).thenReturn(jwt);
 	}
+	
+	
 
 	@Test
 	public void addFriendTest() throws Exception {

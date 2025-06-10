@@ -28,8 +28,6 @@ import com.paymybuddy.backend.repository.UserRepository;
 import com.paymybuddy.backend.security.JwtService;
 import com.paymybuddy.backend.security.PasswordUtils;
 
-import net.bytebuddy.agent.VirtualMachine.ForHotSpot.Connection.Response;
-
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
