@@ -101,7 +101,6 @@ public class UserController {
 		public ResponseEntity<UpdateProfilResponseDTO> updateUserProfil(Principal principal, @RequestBody UpdateProfilDTO updateProfil) {
 			try {
 				String connectedUsername = principal.getName()	;
-				System.err.println(connectedUsername);
 				UpdateProfilResponseDTO updatedProfil = userService.updateUserProfil(connectedUsername, updateProfil);
 				return ResponseEntity.status(HttpStatus.OK).body(updatedProfil);
 			} catch (IllegalArgumentException e) {

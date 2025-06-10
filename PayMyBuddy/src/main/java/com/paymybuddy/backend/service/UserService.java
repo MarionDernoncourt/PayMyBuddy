@@ -68,7 +68,6 @@ public class UserService {
 		userRepository.save(user);
 
 		return new FriendDTO(email);
-
 	}
 
 	public BigDecimal getAccountBalance(String username) {
@@ -145,7 +144,7 @@ public class UserService {
 		if (usernameChanged) {
 			newToken = jwtService.generateJwtToken(user.getUsername());
 		}
-System.out.println(newToken);
+		System.out.println(newToken);
 		return new UpdateProfilResponseDTO(user.getUsername(), user.getEmail(), newToken);
 	}
 

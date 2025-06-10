@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +19,7 @@ import com.paymybuddy.backend.dto.RegistrationUserDTO;
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
+@Sql(scripts = "/data-test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class AuthControllerIT {
 
 	@Autowired
@@ -25,6 +27,8 @@ public class AuthControllerIT {
 
 	private ObjectMapper objectMapper = new ObjectMapper();
 
+	
+	
 	@Test
 	public void registrationUser() throws Exception {
 		RegistrationUserDTO newUser = new RegistrationUserDTO("Severus", "SRogue@poudlard.com", "Lily");
@@ -51,7 +55,7 @@ public class AuthControllerIT {
 
 	@Test
 	public void loginUser() throws Exception {
-		LoginUserDTO loginUser = new LoginUserDTO("hpotter@gryffondor.com", "nimbus3000");
+		LoginUserDTO loginUser = new LoginUserDTO("hermione@gryffondor.com", "123456");
 		String loginUserJSON = objectMapper.writeValueAsString(loginUser);
 		mockMvc.perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON).content(loginUserJSON))
 				.andExpect(status().isOk());
