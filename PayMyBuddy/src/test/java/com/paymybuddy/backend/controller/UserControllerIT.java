@@ -12,6 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,11 +28,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymybuddy.backend.dto.FriendDTO;
 import com.paymybuddy.backend.dto.ProfilDTO;
 import com.paymybuddy.backend.dto.UpdateProfilDTO;
 import com.paymybuddy.backend.dto.UpdateProfilResponseDTO;
+import com.paymybuddy.backend.dto.UsernameDTO;
+import com.paymybuddy.backend.model.User;
 import com.paymybuddy.backend.service.UserService;
 
 @SpringBootTest
@@ -54,8 +59,26 @@ public class UserControllerIT {
 
 		when(jwtDecoder.decode("mock-token")).thenReturn(jwt);
 	}
-	
-	
+
+	@Test
+	public void testGetFriend() throws Exception {
+		String username = "Harry";
+		List<UsernameDTO> friends = new ArrayList<>();
+		friends.add(new UsernameDTO("Hermione"));
+
+		when(userService.getFriends(username)).thenReturn(friends);
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = objectMapper.writeValueAsString(friends);
+
+		mockMvc.perform(
+				get("/api/users/getFriends")
+						.with(jwt().jwt(Jwt.withTokenValue("mock-token").header("alg", "none").claim("sub", "Harry")
+								.claim("scope", "read write").build()))
+						.contentType(MediaType.APPLICATION_JSON).content(json))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.[0].username").value("Hermione"));
+
+	}
 
 	@Test
 	public void addFriendTest() throws Exception {
@@ -117,7 +140,7 @@ public class UserControllerIT {
 				.andExpect(content().string(containsString("Aucun utilisateur trouvé")));
 		;
 	}
-	
+
 	@Test
 	public void addFriendTest_WithUserAlreadyInFriendsList() throws Exception {
 		String username = "Harry";
@@ -138,127 +161,113 @@ public class UserControllerIT {
 				.andExpect(content().string(containsString("Cet utilisateur est déjà dans votre liste d'amis")));
 		;
 	}
-	
+
 	@Test
 	public void addFriendTest_WithoutAuthentication() throws Exception {
-		FriendDTO friend = new FriendDTO ("ron@gryffondor.com");
+		FriendDTO friend = new FriendDTO("ron@gryffondor.com");
 		String json = new ObjectMapper().writeValueAsString(friend);
-		
-		mockMvc.perform(post("/api/users/addfriends").contentType(MediaType.APPLICATION_JSON)
-				.content(json))
-		.andExpect(status().isUnauthorized());
+
+		mockMvc.perform(post("/api/users/addfriends").contentType(MediaType.APPLICATION_JSON).content(json))
+				.andExpect(status().isUnauthorized());
 	}
-	
+
 	@Test
 	public void testGetAccountBalance() throws Exception {
 		BigDecimal amount = new BigDecimal("25.50");
-		
+
 		when(userService.getAccountBalance("Harry")).thenReturn(amount);
-		
-		 mockMvc.perform(get("/api/users/account")
-		            .with(jwt().jwt(Jwt.withTokenValue("mock-token")
-		                .header("alg", "none")
-		                .claim("sub", "Harry")
-		                .claim("scope", "read write")
-		                .build())))
-		        .andExpect(status().isOk())
-		        .andExpect(content().string("25.50"));
+
+		mockMvc.perform(get("/api/users/account").with(jwt().jwt(Jwt.withTokenValue("mock-token").header("alg", "none")
+				.claim("sub", "Harry").claim("scope", "read write").build()))).andExpect(status().isOk())
+				.andExpect(content().string("25.50"));
 	}
-	
+
 	@Test
 	public void testGetAccountBalance_WithNonExistantUser() throws Exception {
-		
+
 		when(userService.getAccountBalance("Harry")).thenThrow(new IllegalArgumentException("Utilisateur non trouvé"));
-		
-		 mockMvc.perform(get("/api/users/account")
-		            .with(jwt().jwt(Jwt.withTokenValue("mock-token")
-		                .header("alg", "none")
-		                .claim("sub", "Harry")
-		                .claim("scope", "read write")
-		                .build())))
-		        .andExpect(status().isBadRequest());
+
+		mockMvc.perform(get("/api/users/account").with(jwt().jwt(Jwt.withTokenValue("mock-token").header("alg", "none")
+				.claim("sub", "Harry").claim("scope", "read write").build()))).andExpect(status().isBadRequest());
 	}
-	
+
 	@Test
 	public void testGetProfilUser() throws Exception {
-		
+
 		ProfilDTO user = new ProfilDTO("Harry", "hpotter@gryffondor.com");
-		
+
 		when(userService.getUserProfil("Harry")).thenReturn(user);
-		
-		mockMvc.perform(get("/api/users/profil")
-			       .with(jwt().jwt(Jwt.withTokenValue("mock-token")
-			                .header("alg", "none")
-			                .claim("sub", "Harry")
-			                .claim("scope", "read write")
-			                .build())))
-		.andExpect(status().isOk())
-		.andExpect(jsonPath("$.email").value("hpotter@gryffondor.com"))
-		.andExpect(jsonPath("$.username").value("Harry"));
-		}
-	
+
+		mockMvc.perform(get("/api/users/profil").with(jwt().jwt(Jwt.withTokenValue("mock-token").header("alg", "none")
+				.claim("sub", "Harry").claim("scope", "read write").build()))).andExpect(status().isOk())
+				.andExpect(jsonPath("$.email").value("hpotter@gryffondor.com"))
+				.andExpect(jsonPath("$.username").value("Harry"));
+	}
+
 	@Test
 	public void testGetProfilUser_WithNonExistantUser() throws Exception {
-		
+
 		ProfilDTO user = new ProfilDTO("Sophie", "sophie@gmail.com");
-		
+
 		when(userService.getUserProfil("Sophie")).thenThrow(new IllegalArgumentException("Utilisateur non trouvé"));
-		
-		mockMvc.perform(get("/api/users/profil")
-			       .with(jwt().jwt(Jwt.withTokenValue("mock-token")
-			                .header("alg", "none")
-			                .claim("sub", "Sophie")
-			                .claim("scope", "read write")
-			                .build())))
-		.andExpect(status().isBadRequest());
-		}
-	
+
+		mockMvc.perform(get("/api/users/profil").with(jwt().jwt(Jwt.withTokenValue("mock-token").header("alg", "none")
+				.claim("sub", "Sophie").claim("scope", "read write").build()))).andExpect(status().isBadRequest());
+	}
+
 	@Test
 	public void testGetProfilUser_Unauthorized() throws Exception {
 		mockMvc.perform(get("/api/users/profil")).andExpect(status().isUnauthorized());
 	}
-	
+
 	@Test
 	public void testUpdateProfilUser() throws Exception {
 		UpdateProfilDTO updateProfilDTO = new UpdateProfilDTO("newHarry", "newhpotter@gryffondor.com", "newPassword");
-		
-		String json = new ObjectMapper().writeValueAsString(updateProfilDTO);	
-		
-		UpdateProfilResponseDTO responseDTO = new UpdateProfilResponseDTO("newHarry", "newhpotter@gryffondor.com", "newPassword");
-		
+
+		String json = new ObjectMapper().writeValueAsString(updateProfilDTO);
+
+		UpdateProfilResponseDTO responseDTO = new UpdateProfilResponseDTO("newHarry", "newhpotter@gryffondor.com",
+				"newPassword");
+
 		when(userService.updateUserProfil(eq("Harry"), any(UpdateProfilDTO.class))).thenReturn(responseDTO);
-		
-		mockMvc.perform(post("/api/users/updateProfil")
-				   .with(jwt().jwt(Jwt.withTokenValue("mock-token")
-			                .header("alg", "none")
-			                .claim("sub", "Harry")
-			                .claim("scope", "read write")
-			                .build()))
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(json))
-		.andExpect(status().isOk())
-		.andExpect(jsonPath("$.username").value("newHarry"))
-		.andExpect(jsonPath("$.email").value("newhpotter@gryffondor.com"));
-		
+
+		mockMvc.perform(
+				post("/api/users/updateProfil")
+						.with(jwt().jwt(Jwt.withTokenValue("mock-token").header("alg", "none").claim("sub", "Harry")
+								.claim("scope", "read write").build()))
+						.contentType(MediaType.APPLICATION_JSON).content(json))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.username").value("newHarry"))
+				.andExpect(jsonPath("$.email").value("newhpotter@gryffondor.com"));
+
 	}
-	
+
 	@Test
 	public void testUpdateUserProfil_EmailOrUsernameAlreadyExist() throws Exception {
-		 UpdateProfilDTO updateProfilDTO = new UpdateProfilDTO("Hermione", "hermione@gryffondor.com", "newPassword");
-			String json = new ObjectMapper().writeValueAsString(updateProfilDTO);	
+		UpdateProfilDTO updateProfilDTO = new UpdateProfilDTO("Hermione", "hermione@gryffondor.com", "newPassword");
+		String json = new ObjectMapper().writeValueAsString(updateProfilDTO);
 
-			when(userService.updateUserProfil(eq("Harry"), any(UpdateProfilDTO.class))).thenThrow(new IllegalArgumentException("Cet email est déjà utilisé par un autre utilisateur"));
-			
-			mockMvc.perform(post("/api/users/updateProfil")
-					.with(jwt().jwt(Jwt.withTokenValue("mock-token")
-			                .header("alg", "none")
-			                .claim("sub", "Harry")
-			                .claim("scope", "read write")
-			                .build()))
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(json))
-			.andExpect(status().isBadRequest());
-		 
+		when(userService.updateUserProfil(eq("Harry"), any(UpdateProfilDTO.class)))
+				.thenThrow(new IllegalArgumentException("Cet email est déjà utilisé par un autre utilisateur"));
+
+		mockMvc.perform(
+				post("/api/users/updateProfil")
+						.with(jwt().jwt(Jwt.withTokenValue("mock-token").header("alg", "none").claim("sub", "Harry")
+								.claim("scope", "read write").build()))
+						.contentType(MediaType.APPLICATION_JSON).content(json))
+				.andExpect(status().isBadRequest());
+
 	}
-	
+
+	@Test
+	public void testRechargeAccount() throws Exception {
+		String username = "Harry";
+
+		
+		mockMvc.perform(post("/api/users/account/recharge").with(jwt().jwt(Jwt.withTokenValue("mock-token")
+				.header("alg", "none").claim("sub", "Harry").claim("scope", "read write").build()))
+
+		).andExpect(status().isOk());
+
+	}
+
 }

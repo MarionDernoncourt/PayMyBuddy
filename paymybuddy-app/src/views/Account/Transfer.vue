@@ -24,7 +24,7 @@
         <button class="pay-button" type="submit">Payer</button>
       </form>
 
-      <p v-if="message" :class="{ error: isError }">{{ message }}</p>
+      <p class="message" v-if="message" :class="{ error: isError }">{{ message }}</p>
 
 
       <div class="transaction-container">
@@ -126,7 +126,7 @@ export default {
     },
     sendMoney() {
       this.message = "";
-      this.isError = "false";
+      this.isError = false;
 
       if (!this.selectedFriendEmail) {
         this.message = "Veuillez sélectionner une relation";
@@ -173,10 +173,9 @@ export default {
           this.amount = null;
           this.description = "";
         })
-        .catch(() => {
-          this.message = "Erreur lors du transfert";
+        .catch((error) => {
+          this.message = error.response?.data?.error || "Une erreur est survenue lors de la transaction";
           this.isError = true;
-
         });
     },
     addFunds() {
@@ -190,9 +189,8 @@ export default {
         .then(res => {
           console.log(res.data);
           this.fetchBalance();
-          this.message = "50€ ont bien été ajouté à votre compte";
+          this.message = "50€ ont bien été ajoutés à votre compte";
           this.isError = false;
-
         })
         .catch(() => {
           this.message = "Erreur lors de l'alimentation de votre compte";
@@ -298,5 +296,11 @@ thead h2 {
 
 thead th {
   font-weight: bold;
+}
+.message {
+  color: red;
+  width: 80%;
+  margin: auto;
+  margin-bottom: 20px;
 }
 </style>

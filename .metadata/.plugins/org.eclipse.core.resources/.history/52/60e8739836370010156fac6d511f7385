@@ -1,5 +1,0 @@
-package com.paymybuddy.backend.exception;
-
-public class ValidationExceptionHandler {
-
-}

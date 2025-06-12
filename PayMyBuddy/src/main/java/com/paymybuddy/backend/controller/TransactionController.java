@@ -2,6 +2,7 @@ package com.paymybuddy.backend.controller;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,7 @@ public class TransactionController {
 	}
 
 	@PostMapping("/transaction")
-	public ResponseEntity<SendTransactionDTO> sendTransaction(Principal principal,
+	public ResponseEntity<?> sendTransaction(Principal principal,
 			@RequestBody SendTransactionDTO transactionDTO) {
 		try {
 			String connectedUserUsername = principal.getName();
@@ -45,7 +46,7 @@ public class TransactionController {
 			SendTransactionDTO transaction = transactionService.sendTransaction(connectedUserUsername, transactionDTO);
 			return ResponseEntity.status(HttpStatus.OK).body(transaction);
 		} catch (IllegalArgumentException e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
 		}
 	}
 

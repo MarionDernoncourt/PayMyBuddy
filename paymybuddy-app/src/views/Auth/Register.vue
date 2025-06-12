@@ -38,6 +38,8 @@ export default {
         .then(response => {
           console.log("Inscription réussie :", response.data);
           this.$router.push("/login");
+          alert("Votre compte a bien été créé !");
+
         })
         .catch(error => {
           this.errorMessage = "Erreur lors de l'inscription, vérifiez vos informations"

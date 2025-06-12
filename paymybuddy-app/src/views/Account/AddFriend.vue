@@ -8,7 +8,7 @@
       <button class="button-submit" type="submit">Ajouter</button>
 
     </form>
-          <p class="error-message" :class="{ error: isError }">{{ message }}</p>
+    <p class="error-message" :class="{ error: isError }">{{ message }}</p>
 
   </div>
 </template>
@@ -41,23 +41,30 @@ export default {
           }
         );
         if (response.data.email) {
-          this.message = "Relation trouvée";
+          this.message = "Relation ajoutée";
           this.isError = false;
           this.email = "";
-        } else {
-          this.message = "Aucun utilisateur trouvé avec cet email";
-          this.isError = true;
         }
       } catch (error) {
-        this.message = "Erreur lors de la recherche.";
-        this.isError = true;
-        console.error("Erreur ajout ami : ", error.response?.status, error.response?.data);
+        if (error.response?.data?.email == "Aucun utilisateur trouvé") {
+          this.message = "Aucun utilisateur trouvé";
+          this.isError = true;
+        } else if (error.response?.data?.email == "Cet utilisateur est déjà dans votre liste d'amis") {
+
+          this.message = "Cet utilisateur est déjà dans votre liste d'amis";
+          this.isError = true;
+          console.error("Erreur ajout ami : ", error.response?.status, error.response?.data);
+        }
+        else {
+          this.message = "Une erreur est survenue lors de l'ajout de votre relation";
+          this.isError = true;
+        }
       }
-    }
-  },
-  mounted() {
-    if (!localStorage.getItem("token")) {
-      this.$router.push("/login")
+    },
+    mounted() {
+      if (!localStorage.getItem("token")) {
+        this.$router.push("/login")
+      }
     }
   }
 }

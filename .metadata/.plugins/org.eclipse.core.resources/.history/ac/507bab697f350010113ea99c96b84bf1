@@ -1,7 +1,0 @@
-package com.paymybuddy.backend.security;
-
-public class JwtUtils {
-	
-	private final String SECRET_KEY = ""
-
-}

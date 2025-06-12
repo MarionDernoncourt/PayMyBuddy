@@ -1,8 +1,0 @@
-package com.paymybuddy.backend.dto;
-
-public class LoginDTO {
-
-	private String email;
-	private String password;
-
-}

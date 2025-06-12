@@ -1,6 +1,8 @@
 # === GLOBAL ===
 .metadata/
 *.log
+logs/
+log/
 
 # === BACKEND: Java (Spring Boot) ===
 PayMyBuddy/target/
