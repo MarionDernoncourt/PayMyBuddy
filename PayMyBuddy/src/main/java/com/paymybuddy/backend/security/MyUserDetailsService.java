@@ -1,5 +1,7 @@
 package com.paymybuddy.backend.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,6 +28,8 @@ import com.paymybuddy.backend.repository.UserRepository;
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
+	private static final Logger logger = LoggerFactory.getLogger(MyUserDetailsService.class);
+
 	private final UserRepository userRepository;
 
 	public MyUserDetailsService(UserRepository userRepository) {
@@ -34,7 +38,12 @@ public class MyUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		logger.debug("Chargement de l'utilisateur par username : {}", username);
+		
 		User user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé"));
+		
+		logger.debug("Utilisateur {} chargé avec succès", username);
+		
 		return org.springframework.security.core.userdetails.User.builder()
 				.username(user.getUsername())
 				.password(user.getPassword())

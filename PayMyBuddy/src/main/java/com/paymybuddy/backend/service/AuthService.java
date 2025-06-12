@@ -22,7 +22,7 @@ import com.paymybuddy.backend.security.PasswordUtils;
 @Service
 public class AuthService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+	private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
 	private final UserRepository userRepository;
 	private final PasswordUtils passwordUtils;
@@ -35,14 +35,19 @@ public class AuthService {
 	}
 
 	public ValidLoginUserDTO login(LoginUserDTO loginUser) {
+		logger.info("Tentative de login du user : {}", loginUser.getEmail());
+		
 		User user = userRepository.findByEmailIgnoreCase(loginUser.getEmail())
 				.orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
 		
 		if(!passwordUtils.verifyPassword(loginUser.getPassword(), user.getPassword())) {
+			logger.warn("Echec de login, mod de passe incorrect pour {}", loginUser.getEmail());
 			throw new IllegalArgumentException("Mot de passe incorrect");
 		}
 		
 		String token = jwtService.generateJwtToken(user.getUsername());
+		
+		logger.info("Login réussi pour {}", loginUser.getEmail());
 		
 		return new ValidLoginUserDTO(user.getUsername(), user.getEmail(), token);
 	}

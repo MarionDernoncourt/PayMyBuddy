@@ -3,6 +3,8 @@ package com.paymybuddy.backend.security;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +38,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 @Configuration
 public class SpringSecurityConfig {
 
+	private static final Logger logger = LoggerFactory.getLogger(SpringSecurityConfig.class);
 	/**
 	 * Injection de la clé secrete pour les JWT (définies dans application.properties)
 	 * 	 */
@@ -57,6 +60,9 @@ public class SpringSecurityConfig {
      */
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		
+		logger.info("Configuration de la sécurité HTTP avec endpoints /login et /register en accès libre");
+
 		return http
 				.cors(Customizer.withDefaults())
 				.csrf(csrf -> csrf.disable())
@@ -87,6 +93,7 @@ public class SpringSecurityConfig {
      */
 	@Bean
 	public JwtEncoder jwtEncoder(SecretKey secretKey) {
+		logger.debug("Initialisation de l'encodeur JWT avec la clé HMAC");
 		JWKSource<SecurityContext> jwtkSource = new ImmutableSecret<>(secretKey);
 		return new NimbusJwtEncoder(jwtkSource);
 	}

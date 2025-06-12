@@ -2,6 +2,8 @@ package com.paymybuddy.backend.security;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -21,12 +23,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig {
+	
+	private static final Logger logger = LoggerFactory.getLogger(WebConfig.class);
+
 	/**
 	 * Configure les règles CORS pour Spring MVC (niveau controllers)
 	 */
 	
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
+		logger.debug("CORS MVC configuré : origine autorisée = http://localhost:8080");
+
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
@@ -43,6 +50,8 @@ public class WebConfig {
 	 */
 		@Bean
 		public CorsConfigurationSource corsConfigurationSource() {
+			logger.debug("CORS Security configuré : méthodes autorisées = GET, POST, PUT, DELETE");
+
 			 CorsConfiguration config = new CorsConfiguration();
 
 		        config.setAllowedOrigins(List.of("http://localhost:8080")); // Frontend Angular
