@@ -1,8 +1,9 @@
 # === GLOBAL ===
-.metadata/
+# Ignorer tous les fichiers de log
 *.log
-logs/
-log/
+**/log/
+**/logs/
+.metadata/
 
 # === BACKEND: Java (Spring Boot) ===
 PayMyBuddy/target/

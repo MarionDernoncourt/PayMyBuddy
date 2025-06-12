@@ -122,7 +122,7 @@ public class UserService {
 			});
 		}
 
-		if (!user.getUsername().equalsIgnoreCase(updateProfil.getUsername())) {
+		if (!user.getUsername().equals(updateProfil.getUsername())) {
 			usernameChanged = true;
 			user.setUsername(updateProfil.getUsername());
 
