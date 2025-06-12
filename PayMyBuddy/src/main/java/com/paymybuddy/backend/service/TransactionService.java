@@ -11,9 +11,14 @@ import com.paymybuddy.backend.dto.SendTransactionDTO;
 import com.paymybuddy.backend.dto.TransactionDTO;
 import com.paymybuddy.backend.model.Transaction;
 import com.paymybuddy.backend.model.User;
-import com.paymybuddy.backend
-.repository.TransactionRepository;
+import com.paymybuddy.backend.repository.TransactionRepository;
 import com.paymybuddy.backend.repository.UserRepository;
+
+/**
+ * Service gérant les opérations liées aux transactions financières entre
+ * utilisateurs, telles que la récupération des transactions reçues et l'envoi
+ * de transactions.
+ */
 
 @Service
 public class TransactionService {
@@ -22,7 +27,7 @@ public class TransactionService {
 
 	private UserRepository userRepository;
 	private TransactionRepository transactionRepository;
-	
+
 	public TransactionService(UserRepository userRepository, TransactionRepository transactionRepository,
 			UserService userService) {
 		this.userRepository = userRepository;
@@ -54,11 +59,11 @@ public class TransactionService {
 
 		User senderUser = userRepository.findByUsernameIgnoreCase(connectedUserUsername)
 				.orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
-		
-User receiverUser = userRepository.findByUsernameIgnoreCase(transactionDTO.getReceiverUsername())
+
+		User receiverUser = userRepository.findByUsernameIgnoreCase(transactionDTO.getReceiverUsername())
 				.orElseThrow(() -> new IllegalArgumentException("Destinataire non trouvé"));
-		
-if (!senderUser.getEmail().equalsIgnoreCase(transactionDTO.getSenderEmail())) {
+
+		if (!senderUser.getEmail().equalsIgnoreCase(transactionDTO.getSenderEmail())) {
 			logger.warn("L'utilisateur connecté ({}) n'est pas l'expéditeur({})", connectedUserUsername,
 					transactionDTO.getSenderEmail());
 			throw new IllegalArgumentException("L'utilisateur connecté n'est pas l'expéditeur");

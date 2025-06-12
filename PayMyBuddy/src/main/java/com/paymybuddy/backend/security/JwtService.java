@@ -12,6 +12,19 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Component;
 
+/**
+ * Service de gestion des tokens JWT (JSON Web Tokens).
+ * 
+ * Cette classe fournit des méthodes pour :
+ * - générer un token JWT signé avec un nom d'utilisateur comme sujet,
+ * - extraire le nom d'utilisateur depuis un token JWT,
+ * - valider un token JWT (vérifier sa validité, sa signature et sa date d'expiration).
+ * 
+ * Le token JWT généré est valide pendant 1 heure et utilise l'algorithme HMAC SHA-256 pour la signature.
+ * 
+ * Ce service est utilisé pour sécuriser les échanges en authentifiant les utilisateurs via des tokens stateless.
+ */
+
 @Component
 public class JwtService {
 

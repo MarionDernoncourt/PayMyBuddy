@@ -10,6 +10,14 @@ import org.springframework.stereotype.Repository;
 
 import com.paymybuddy.backend.model.User;
 
+/**
+ * Repository Spring Data pour gérer les entités User.
+ * 
+ * Fournit des méthodes CRUD ainsi que des méthodes personnalisées
+ * pour rechercher un utilisateur par email ou username,
+ * et récupérer la liste des amis d'un utilisateur donné.
+ */
+
 @Repository
 public interface UserRepository extends CrudRepository<User, Integer> {
 

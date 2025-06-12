@@ -13,6 +13,12 @@ import com.paymybuddy.backend.repository.UserRepository;
 import com.paymybuddy.backend.security.JwtService;
 import com.paymybuddy.backend.security.PasswordUtils;
 
+/**
+ * Service gérant l'authentification et l'inscription des utilisateurs,
+ * incluant la validation des identifiants, le hachage des mots de passe
+ * et la génération de tokens JWT.
+ */
+
 @Service
 public class AuthService {
 	

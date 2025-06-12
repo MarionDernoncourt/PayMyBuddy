@@ -15,6 +15,12 @@ import com.paymybuddy.backend.service.AuthService;
 
 import jakarta.validation.Valid;
 
+/**
+ * Contrôleur REST pour l'authentification des utilisateurs.
+ * 
+ * Gère les requêtes de login et d'inscription via les endpoints /login et /register.
+ */
+
 @Controller
 @RequestMapping("/api/auth")
 public class AuthController {

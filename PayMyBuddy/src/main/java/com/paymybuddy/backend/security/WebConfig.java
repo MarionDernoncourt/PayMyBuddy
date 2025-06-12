@@ -10,9 +10,20 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * Configuration CORS de l'application Spring.
+ * 
+ * Cette classe permet de configurer les règles de Cross-Origin Resource Sharing (CORS)
+ * afin d'autoriser le frontend à communiquer avec l'API backend 
+ * depuis un domaine différent.
+ **/
+
+
 @Configuration
 public class WebConfig {
-	
+	/**
+	 * Configure les règles CORS pour Spring MVC (niveau controllers)
+	 */
 	
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
@@ -27,6 +38,9 @@ public class WebConfig {
 		};
 	}
 		
+	/**
+	 * Configure les règles CORS pour Spring Security
+	 */
 		@Bean
 		public CorsConfigurationSource corsConfigurationSource() {
 			 CorsConfiguration config = new CorsConfiguration();

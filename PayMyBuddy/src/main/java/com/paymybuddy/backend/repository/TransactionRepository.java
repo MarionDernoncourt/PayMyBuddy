@@ -8,6 +8,13 @@ import org.springframework.stereotype.Repository;
 import com.paymybuddy.backend.model.Transaction;
 import com.paymybuddy.backend.model.User;
 
+/**
+ * Repository Spring Data pour gérer les entités Transaction.
+ * 
+ * Fournit les opérations CRUD de base
+ * et une méthode personnalisée pour récupérer les transactions par émetteur.
+ */
+
 @Repository
 public interface TransactionRepository extends CrudRepository<Transaction, Integer> {
 	

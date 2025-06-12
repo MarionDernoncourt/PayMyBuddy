@@ -20,6 +20,14 @@ import com.paymybuddy.backend.dto.UpdateProfilResponseDTO;
 import com.paymybuddy.backend.dto.UsernameDTO;
 import com.paymybuddy.backend.service.UserService;
 
+/**
+ * Contrôleur REST pour la gestion des utilisateurs.
+ * 
+ * Permet de récupérer la liste des amis, ajouter un ami,
+ * consulter et recharger le solde du compte utilisateur,
+ * ainsi que consulter et mettre à jour le profil utilisateur.
+ */
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {

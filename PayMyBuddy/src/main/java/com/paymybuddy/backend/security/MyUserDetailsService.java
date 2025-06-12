@@ -3,21 +3,33 @@ package com.paymybuddy.backend.security;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.paymybuddy.backend.model.User;
 import com.paymybuddy.backend.repository.UserRepository;
 
+/**
+ * Service de sécurité utilisé par Spring Security pour charger les détails
+ * d'un utilisateur à partir de son nom d'utilisateur.
+ * 
+ * Cette classe implémente l'interface {@link UserDetailsService}, qui est utilisée
+ * automatiquement par Spring Security pour récupérer les informations d'un utilisateur
+ * lorsque celui-ci est authentifié via un token JWT ou toute autre méthode de sécurité.
+ * 
+ * Elle permet ainsi à Spring de valider l'identité de l'utilisateur en retrouvant ses
+ * données (username et mot de passe) dans la base de données.
+ * 
+ * Ce service n'est pas utilisé directement dans les méthodes de connexion/inscription,
+ * mais est indispensable au bon fonctionnement de la sécurité côté backend.
+ */
+
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
 	private final UserRepository userRepository;
-	private final PasswordEncoder passwordEncoder;
 
-	public MyUserDetailsService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+	public MyUserDetailsService(UserRepository userRepository) {
 		this.userRepository = userRepository;
-		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Override

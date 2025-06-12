@@ -17,6 +17,13 @@ import com.paymybuddy.backend.dto.SendTransactionDTO;
 import com.paymybuddy.backend.dto.TransactionDTO;
 import com.paymybuddy.backend.service.TransactionService;
 
+/**
+ * Contrôleur REST pour la gestion des transactions.
+ * 
+ * Permet à l'utilisateur connecté de consulter les transactions reçues 
+ * et d'envoyer de nouvelles transactions.
+ */
+
 @RestController
 @RequestMapping("/api/transactions")
 public class TransactionController {

@@ -3,6 +3,11 @@ package com.paymybuddy.backend.security;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service utilitaire pour le hachage et la vérification des mots de passe
+ * utilisant BCryptPasswordEncoder de Spring Security.
+ */
+
 @Service
 public class PasswordUtils {
 
