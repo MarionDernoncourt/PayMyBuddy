@@ -157,7 +157,6 @@ export default {
         receiverUsername: this.selectedFriendEmail,
       };
 
-      console.log("payload : ", payload);
       axios.post('http://localhost:8081/api/transactions/transaction', payload,
         {
           headers: {

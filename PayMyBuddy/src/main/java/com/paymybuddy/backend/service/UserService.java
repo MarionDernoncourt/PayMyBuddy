@@ -18,8 +18,6 @@ import com.paymybuddy.backend.repository.IUserRepository;
 import com.paymybuddy.backend.security.JwtService;
 import com.paymybuddy.backend.security.PasswordUtils;
 
-import jakarta.transaction.Transactional;
-
 /**
  * Service gérant les opérations liées aux utilisateurs, notamment : gestion des
  * amis, consultation et mise à jour du profil utilisateur, gestion du solde de
