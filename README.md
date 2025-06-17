@@ -28,7 +28,7 @@ Application permettant à un utilisateur d'envoyer de l'argent à ses amis, de c
 git clone https://github.com/MarionDernoncourt/PayMyBuddy.git
 
 ### 2.Initialisation de la base de donnée 
-voir dossier Script SQL pour les scripts d'initialisation [Script SQL](./scripts/sql/init.sql)
+voir dossier Script SQL pour les scripts d'initialisation [Script SQL](./scripts_MySQL/script_tables.txt)
 
 ### 3. Configuration des variables d'environnement 
 Dans le fichier application.properties, configurer les variables suivantes : 
