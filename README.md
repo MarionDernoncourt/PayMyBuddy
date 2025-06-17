@@ -1,4 +1,4 @@
-#PayMyBuddy
+# PayMyBuddy
 
 Application permettant à un utilisateur d'envoyer de l'argent à ses amis, de consulter ses transactions et de gérer ses contacts.
 
@@ -28,7 +28,7 @@ Application permettant à un utilisateur d'envoyer de l'argent à ses amis, de c
 git clone https://github.com/MarionDernoncourt/PayMyBuddy.git
 
 ### 2.Initialisation de la base de donnée 
-voir dossier Script SQL pour les scripts d'initialisation
+voir dossier Script SQL pour les scripts d'initialisation [Script SQL](./scripts/sql/init.sql)
 
 ### 3. Configuration des variables d'environnement 
 Dans le fichier application.properties, configurer les variables suivantes : 
@@ -36,6 +36,14 @@ Dans le fichier application.properties, configurer les variables suivantes :
 spring.datasource.username=${DB_USERNAME}
 spring.datasource.password=${DB_PASSWORD}
 jwt.secret=${JWT_SECRET_KEY}
+
+À définir dans votre environnement système ou dans un fichier `.env` utilisé par votre IDE.
+
+### Couche DAL et gestion des transactions
+
+Le backend utilise Spring Data JPA avec une architecture en couche : 
+- La couche DAL (@Repository) gère l'accès aux entités,
+- La couche (@Service) utilise l'annotation @Transactional pour garantir la cohérence des transactions (commit et rollback automatique en cas d'erreur).
 
 ## Lancement de l'application
 ### Backend
