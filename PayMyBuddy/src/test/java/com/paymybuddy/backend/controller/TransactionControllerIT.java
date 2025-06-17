@@ -60,7 +60,7 @@ public class TransactionControllerIT {
 		List<TransactionDTO> transactions = List
 				.of(new TransactionDTO("description", BigDecimal.valueOf(100.0), "Harry"));
 
-		when(transactionService.getReceivedTransactions(username)).thenReturn(transactions);
+		when(transactionService.getSentTransactions(username)).thenReturn(transactions);
 
 		mockMvc.perform(get("/api/transactions/").with(jwt().jwt(Jwt.withTokenValue("mock-token").header("alg", "none")
 				.claim("sub", "Harry").claim("scope", "read write").build())).contentType(MediaType.APPLICATION_JSON))
@@ -72,7 +72,7 @@ public class TransactionControllerIT {
 
 		String username = "unknown";
 
-		when(transactionService.getReceivedTransactions(username)).thenThrow(new IllegalArgumentException());
+		when(transactionService.getSentTransactions(username)).thenThrow(new IllegalArgumentException());
 
 		mockMvc.perform(get("/api/transactions/").with(jwt().jwt(Jwt.withTokenValue("mock-token").header("alg", "none")
 				.claim("sub", "unknown").claim("scope", "read write").build())).contentType(MediaType.APPLICATION_JSON))

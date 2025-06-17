@@ -32,10 +32,10 @@ public class TransactionController {
 	private TransactionService transactionService;
 
 	@GetMapping("/")
-	public ResponseEntity<List<TransactionDTO>> getReceivedTransactions(Principal principal) {
+	public ResponseEntity<List<TransactionDTO>> getSentTransactions(Principal principal) {
 		try {
 			String connectedUserUsername = principal.getName();
-			List<TransactionDTO> transactions = transactionService.getReceivedTransactions(connectedUserUsername);
+			List<TransactionDTO> transactions = transactionService.getSentTransactions(connectedUserUsername);
 			return ResponseEntity.status(HttpStatus.OK).body(transactions);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

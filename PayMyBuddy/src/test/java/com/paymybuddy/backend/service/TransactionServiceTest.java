@@ -73,7 +73,7 @@ public class TransactionServiceTest {
 		when(transactionRepository.findBySender(any(User.class)))
 				.thenReturn(List.of(transaction));
 
-		List<TransactionDTO> result = transactionService.getReceivedTransactions("sender");
+		List<TransactionDTO> result = transactionService.getSentTransactions("sender");
 
 		assertNotNull(result);
 		assertEquals(1, result.size());

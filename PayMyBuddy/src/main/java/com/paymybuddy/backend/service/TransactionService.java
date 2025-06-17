@@ -36,7 +36,7 @@ public class TransactionService {
 		this.transactionRepository = transactionRepository;
 	}
 
-	public List<TransactionDTO> getReceivedTransactions(String username) {
+	public List<TransactionDTO> getSentTransactions(String username) {
 		logger.info("Tentative de récupération des transactions du user : {}", username);
 
 		User user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(() -> {
@@ -55,7 +55,7 @@ public class TransactionService {
 		return transactionDTO;
 	}
 
-	@Transactional
+	@Transactional // Si une etape du transfert echoue, toute l'operation est annulee, garantie l'integrite financiere
 	public SendTransactionDTO sendTransaction(String connectedUserUsername, SendTransactionDTO transactionDTO) {
 		logger.info("Tentative de création d'une transaction de {} à {}", transactionDTO.getSenderEmail(),
 				transactionDTO.getReceiverUsername());
