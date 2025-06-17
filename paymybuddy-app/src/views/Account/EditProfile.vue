@@ -26,7 +26,7 @@
 
     <button @click="submitForm">Modifier</button>
 
-    <p v-if="message" :class="{ error: isError }" role="alert">{{ message }}</p>
+    <p v-if="message" class="message" :class="{ error: isError }" role="alert">{{ message }}</p>
   </div>
 </template>
 
@@ -109,6 +109,9 @@ export default {
           this.editing.email = false;
           this.editing.password = false;
 
+          this.isError = false;
+          this.message ="Profil mis à jour avec succès"
+
         })
         .catch(error => {
           this.isError = true;
@@ -174,7 +177,10 @@ button {
   cursor: pointer;
 }
 
-.error {
+.message {
   color: red;
+  width: 80%;
+  margin-top: 10px;
+  text-align: center;
 }
 </style>

@@ -44,7 +44,6 @@ public class User {
 					CascadeType.PERSIST,
 					CascadeType.MERGE
 			})
-			
 	@JoinTable(
 			name = "user_user", 
 			joinColumns = @JoinColumn(name = "user_id"), 
