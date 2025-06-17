@@ -3,18 +3,22 @@
     <div class="register-container">
       <h1>Pay My Buddy</h1>
       <form @submit.prevent="handleRegister" class="register-form">
-        <div class="input-container"> <input type="username" id="username" placeholder="Username" v-model="username"
-            required />
+        <div class="input-container">
 
+          <label for="username" class="sr-only">Username</label>
+          <input type="username" id="username" placeholder="Username" v-model="username" required />
+          
+          <label for="email" class="sr-only">Email</label>
           <input type="email" id="email" placeholder="email" v-model="email" required />
 
+          <label for="password" class="sr-only">Password</label>
           <input type="password" id="password" placeholder="password" v-model="password" required />
 
         </div>
         <button type="submit">S'inscrire</button>
 
       </form>
-      <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+      <p v-if="errorMessage" class="error" role="alert">{{ errorMessage }}</p>
     </div>
   </div>
 </template>
@@ -42,8 +46,8 @@ export default {
 
         })
         .catch(error => {
-          this.errorMessage = "Erreur lors de l'inscription, vérifiez vos informations"
-          console.error("Erreur inscription:", error);
+          this.errorMessage = error.response?.data?.error;
+
         })
     }
   }
@@ -102,8 +106,8 @@ button {
   background-color: #207FEE;
   color: white;
   border-radius: 15px 15px 15px 15px;
-  border:#207FEE 1px solid;
-;
+  border: #207FEE 1px solid;
+  ;
 }
 
 h1 {
@@ -120,5 +124,18 @@ h1 {
 .error {
   color: red;
   margin-top: 10px;
+}
+
+/* pour les lecteurs d'écran */ 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 </style>

@@ -21,7 +21,7 @@ import com.paymybuddy.backend.dto.RegistrationUserDTO;
 import com.paymybuddy.backend.dto.ValidLoginUserDTO;
 import com.paymybuddy.backend.dto.ValidRegistrationUserDTO;
 import com.paymybuddy.backend.model.User;
-import com.paymybuddy.backend.repository.UserRepository;
+import com.paymybuddy.backend.repository.IUserRepository;
 import com.paymybuddy.backend.security.JwtService;
 import com.paymybuddy.backend.security.PasswordUtils;
 
@@ -29,7 +29,7 @@ import com.paymybuddy.backend.security.PasswordUtils;
 public class AuthServiceTest {
 
 	@Mock
-	private UserRepository userRepository;
+	private IUserRepository userRepository;
 
 	@Mock
 	private PasswordUtils passwordUtils;

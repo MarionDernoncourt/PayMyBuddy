@@ -21,16 +21,16 @@ import com.paymybuddy.backend.dto.SendTransactionDTO;
 import com.paymybuddy.backend.dto.TransactionDTO;
 import com.paymybuddy.backend.model.Transaction;
 import com.paymybuddy.backend.model.User;
-import com.paymybuddy.backend.repository.TransactionRepository;
-import com.paymybuddy.backend.repository.UserRepository;
+import com.paymybuddy.backend.repository.ITransactionRepository;
+import com.paymybuddy.backend.repository.IUserRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class TransactionServiceTest {
 
 	@Mock
-	private TransactionRepository transactionRepository;
+	private ITransactionRepository transactionRepository;
 	@Mock
-	private UserRepository userRepository;
+	private IUserRepository userRepository;
 	@InjectMocks
 	private TransactionService transactionService;
 

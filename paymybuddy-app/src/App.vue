@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <headerComponent v-if="isLogged"  @logout="onLogout"  />
-    <div class="main-container">
+    <main>
       <router-view @login="onLogin" />
-    </div>
+    </main>
 
   </div>
 </template>
@@ -51,7 +51,7 @@ html {
   height: var(--header-height);
   z-index: 1000;
 }
-.main-container {
+main {
   position: relative;
   z-index: 1;
 }

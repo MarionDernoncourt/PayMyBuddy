@@ -6,10 +6,12 @@
 
       <div class="add-funds-container">
         <p class="addFunds">Alimenter mon compte</p>
-        <button @click="addFunds" class="add-funds-button">+50€</button>
+        <button @click="addFunds" class="add-funds-button" aria-labelledby="addFundsLabel">+50€</button>
       </div>
 
       <form @submit.prevent="sendMoney" class="transfer-form">
+
+        <label for="friend" class="sr-only">Sélectionner une relation</label>
         <select id="friend" v-model="selectedFriendEmail" required>
           <option disabled value="">Sélectionner une relation</option>
           <option v-for="friend in friends" :key="friend.username" :value="friend.username">
@@ -17,14 +19,17 @@
           </option>
         </select>
 
+        <label for="description" class="sr-only">Description</label>
         <input id="description" v-model="description" placeholder="Description" required />
 
-        <input id="amount" v-model.number="amount" type="number" min="0.01" step="0.01" placeholder="0€" />
+        <label for="amount" class="sr-only">Montant en Euros</label>
+        <input id="amount" v-model.number="amount" type="number" min="0.01" step="0.01" placeholder="0€"
+          aria-describedby="amount-info" />
 
         <button class="pay-button" type="submit">Payer</button>
       </form>
 
-      <p class="message" v-if="message" :class="{ error: isError }">{{ message }}</p>
+      <p class="message" v-if="message" :class="{ error: isError }" role="alert">{{ message }}</p>
 
 
       <div class="transaction-container">
@@ -33,9 +38,9 @@
         <table v-if="transactions.length">
           <thead>
             <tr>
-              <th>Relation</th>
-              <th>Description</th>
-              <th>Montant</th>
+              <th scope="col">Relation</th>
+              <th scope="col">Description</th>
+              <th scope="col">Montant</th>
             </tr>
           </thead>
           <tbody>
@@ -274,9 +279,10 @@ export default {
   width: 80%;
   margin: auto;
   padding: 20px;
-    margin-bottom: 30px;
+  margin-bottom: 30px;
 
 }
+
 table {
   width: 100%;
   margin: auto;
@@ -297,10 +303,24 @@ thead h2 {
 thead th {
   font-weight: bold;
 }
+
 .message {
   color: red;
   width: 80%;
   margin: auto;
   margin-bottom: 20px;
+}
+
+/* Lecteur d'écran */ 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 </style>

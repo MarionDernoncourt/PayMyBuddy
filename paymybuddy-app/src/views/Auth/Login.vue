@@ -4,11 +4,13 @@
     <div class="login-container">
       <h1>Pay My Buddy</h1>
       <form @submit.prevent="handleLogin" class="login-form">
+         <label for="email" class="sr-only">Mail</label>
         <input type="email" id="email" placeholder="Mail" v-model="email" required />
+         <label for="password" class="sr-only">Mot de passe</label>
         <input type="password" id="password" placeholder="Mot de passe" v-model="password" required />
         <button type="submit">Se connecter</button>
       </form>
-      <p v-if="error" style="color: red;">{{ error }}</p>
+      <p v-if="error" role="alert" style="color: red;">{{ error }}</p>
     </div>
   </div>
 </template>
@@ -42,8 +44,7 @@ export default {
           this.$router.push('/transfer')
         })
         .catch(error => {
-          this.error = "Échec de la connexion"
-          console.error("Erreur de la connexion: ", error)
+          this.error = error.response?.data?.error;
         })
     }
   }
@@ -121,5 +122,17 @@ h1 {
 .error {
   color: red;
   margin-top: 10px;
+}
+/* pour les lecteurs d'écran */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 </style>

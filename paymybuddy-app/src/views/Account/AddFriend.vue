@@ -8,7 +8,7 @@
       <button class="button-submit" type="submit">Ajouter</button>
 
     </form>
-    <p class="error-message" :class="{ error: isError }">{{ message }}</p>
+    <p class="error-message" role="alert" :class="{ error: isError }">{{ message }}</p>
 
   </div>
 </template>

@@ -11,8 +11,10 @@ import com.paymybuddy.backend.dto.SendTransactionDTO;
 import com.paymybuddy.backend.dto.TransactionDTO;
 import com.paymybuddy.backend.model.Transaction;
 import com.paymybuddy.backend.model.User;
-import com.paymybuddy.backend.repository.TransactionRepository;
-import com.paymybuddy.backend.repository.UserRepository;
+import com.paymybuddy.backend.repository.ITransactionRepository;
+import com.paymybuddy.backend.repository.IUserRepository;
+
+import jakarta.transaction.Transactional;
 
 /**
  * Service gérant les opérations liées aux transactions financières entre
@@ -25,10 +27,10 @@ public class TransactionService {
 
 	private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
 
-	private UserRepository userRepository;
-	private TransactionRepository transactionRepository;
+	private IUserRepository userRepository;
+	private ITransactionRepository transactionRepository;
 
-	public TransactionService(UserRepository userRepository, TransactionRepository transactionRepository,
+	public TransactionService(IUserRepository userRepository, ITransactionRepository transactionRepository,
 			UserService userService) {
 		this.userRepository = userRepository;
 		this.transactionRepository = transactionRepository;
@@ -53,6 +55,7 @@ public class TransactionService {
 		return transactionDTO;
 	}
 
+	@Transactional
 	public SendTransactionDTO sendTransaction(String connectedUserUsername, SendTransactionDTO transactionDTO) {
 		logger.info("Tentative de création d'une transaction de {} à {}", transactionDTO.getSenderEmail(),
 				transactionDTO.getReceiverUsername());

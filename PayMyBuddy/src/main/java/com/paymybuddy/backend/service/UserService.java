@@ -14,7 +14,7 @@ import com.paymybuddy.backend.dto.UpdateProfilDTO;
 import com.paymybuddy.backend.dto.UpdateProfilResponseDTO;
 import com.paymybuddy.backend.dto.UsernameDTO;
 import com.paymybuddy.backend.model.User;
-import com.paymybuddy.backend.repository.UserRepository;
+import com.paymybuddy.backend.repository.IUserRepository;
 import com.paymybuddy.backend.security.JwtService;
 import com.paymybuddy.backend.security.PasswordUtils;
 
@@ -31,11 +31,11 @@ public class UserService {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-	private final UserRepository userRepository;
+	private final IUserRepository userRepository;
 	private final PasswordUtils passwordUtils;
 	private final JwtService jwtService;
 
-	public UserService(UserRepository userRepository, PasswordUtils passwordUtils, JwtService jwtService) {
+	public UserService(IUserRepository userRepository, PasswordUtils passwordUtils, JwtService jwtService) {
 		this.userRepository = userRepository;
 		this.passwordUtils = passwordUtils;
 		this.jwtService = jwtService;
@@ -54,7 +54,6 @@ public class UserService {
 
 	}
 
-	@Transactional
 	public FriendDTO addFriends(String username, String email) {
 		logger.info("Tentative d'ajout d'un ami {} par {}", email, username);
 

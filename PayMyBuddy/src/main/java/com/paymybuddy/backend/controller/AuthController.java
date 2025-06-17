@@ -1,5 +1,7 @@
 package com.paymybuddy.backend.controller;
 
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,23 +34,23 @@ public class AuthController {
 	}
 	
 	@PostMapping("/login")
-	public ResponseEntity<ValidLoginUserDTO> login(@RequestBody LoginUserDTO loginUser) {
+	public ResponseEntity<?> login(@RequestBody LoginUserDTO loginUser) {
 		try {
 		ValidLoginUserDTO user = authService.login(loginUser);
 		return ResponseEntity.status(HttpStatus.OK).body(user);
 		}catch (IllegalArgumentException e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()	;
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()))	;
 		}
 	}
 	
 	@PostMapping("/register")
-	public ResponseEntity<ValidRegistrationUserDTO> registerUser(
+	public ResponseEntity<?> registerUser(
 			@RequestBody @Valid RegistrationUserDTO registrationUser) {
 		try {
 			ValidRegistrationUserDTO validRegistation = authService.registerUser(registrationUser);
 			return ResponseEntity.status(HttpStatus.CREATED).body(validRegistation);
 		} catch (IllegalArgumentException e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
 		}
 
 	}

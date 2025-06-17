@@ -54,10 +54,10 @@ public class WebConfig {
 
 			 CorsConfiguration config = new CorsConfiguration();
 
-		        config.setAllowedOrigins(List.of("http://localhost:8080")); // Frontend Angular
+		        config.setAllowedOrigins(List.of("http://localhost:8080")); // Frontend 
 		        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
 		        config.setAllowedHeaders(List.of("*"));
-		        config.setAllowCredentials(true); // Si tu utilises des cookies/sessions
+		        config.setAllowCredentials(true); 
 
 		        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		        source.registerCorsConfiguration("/**", config);

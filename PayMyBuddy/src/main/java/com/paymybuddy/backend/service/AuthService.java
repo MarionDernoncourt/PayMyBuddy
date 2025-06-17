@@ -9,7 +9,7 @@ import com.paymybuddy.backend.dto.RegistrationUserDTO;
 import com.paymybuddy.backend.dto.ValidLoginUserDTO;
 import com.paymybuddy.backend.dto.ValidRegistrationUserDTO;
 import com.paymybuddy.backend.model.User;
-import com.paymybuddy.backend.repository.UserRepository;
+import com.paymybuddy.backend.repository.IUserRepository;
 import com.paymybuddy.backend.security.JwtService;
 import com.paymybuddy.backend.security.PasswordUtils;
 
@@ -24,11 +24,11 @@ public class AuthService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
-	private final UserRepository userRepository;
+	private final IUserRepository userRepository;
 	private final PasswordUtils passwordUtils;
 	private final JwtService jwtService;
 
-	public AuthService(UserRepository userRepository, PasswordUtils passwordUtils, JwtService jwtUtils) {
+	public AuthService(IUserRepository userRepository, PasswordUtils passwordUtils, JwtService jwtUtils) {
 		this.userRepository = userRepository;
 		this.passwordUtils = passwordUtils;
 		this.jwtService = jwtUtils;

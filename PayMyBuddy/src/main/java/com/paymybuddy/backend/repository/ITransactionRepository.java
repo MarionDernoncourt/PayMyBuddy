@@ -16,7 +16,7 @@ import com.paymybuddy.backend.model.User;
  */
 
 @Repository
-public interface TransactionRepository extends CrudRepository<Transaction, Integer> {
+public interface ITransactionRepository extends CrudRepository<Transaction, Integer> {
 	
 	List<Transaction> findBySender(User receiver);
 

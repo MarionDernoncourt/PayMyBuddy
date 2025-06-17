@@ -14,7 +14,6 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Component;
 
-import com.paymybuddy.backend.service.AuthService;
 
 /**
  * Service de gestion des tokens JWT (JSON Web Tokens).

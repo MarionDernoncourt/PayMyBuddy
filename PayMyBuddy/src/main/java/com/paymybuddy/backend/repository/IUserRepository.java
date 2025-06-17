@@ -19,7 +19,7 @@ import com.paymybuddy.backend.model.User;
  */
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Integer> {
+public interface IUserRepository extends CrudRepository<User, Integer> {
 
 	Optional<User> findByEmailIgnoreCase(String email);
 

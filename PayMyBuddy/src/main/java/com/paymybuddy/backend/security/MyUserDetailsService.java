@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.paymybuddy.backend.model.User;
-import com.paymybuddy.backend.repository.UserRepository;
+import com.paymybuddy.backend.repository.IUserRepository;
 
 /**
  * Service de sécurité utilisé par Spring Security pour charger les détails
@@ -16,7 +16,7 @@ import com.paymybuddy.backend.repository.UserRepository;
  * 
  * Cette classe implémente l'interface {@link UserDetailsService}, qui est utilisée
  * automatiquement par Spring Security pour récupérer les informations d'un utilisateur
- * lorsque celui-ci est authentifié via un token JWT ou toute autre méthode de sécurité.
+ * lorsque celui-ci est authentifié via un token JWT (ou autre méthode d'authentification).
  * 
  * Elle permet ainsi à Spring de valider l'identité de l'utilisateur en retrouvant ses
  * données (username et mot de passe) dans la base de données.
@@ -30,9 +30,9 @@ public class MyUserDetailsService implements UserDetailsService {
 
 	private static final Logger logger = LoggerFactory.getLogger(MyUserDetailsService.class);
 
-	private final UserRepository userRepository;
+	private final IUserRepository userRepository;
 
-	public MyUserDetailsService(UserRepository userRepository) {
+	public MyUserDetailsService(IUserRepository userRepository) {
 		this.userRepository = userRepository;
 	}
 

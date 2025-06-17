@@ -1,12 +1,15 @@
 <template>
   <div class="header">
     <div class="title">
-      <p>Pay My Buddy</p>
+      <h1>Pay My Buddy</h1>
       <nav class="nav-links">
-        <router-link to="transfer">Transferer</router-link>
-        <router-link to="edit-profile">Profil</router-link>
-        <router-link to="addFriend">Ajouter relation</router-link>
-        <a @click.prevent="logout" href="#">Se déconnecter</a>
+        <ul>
+          <li><router-link to="transfer">Transferer</router-link></li>
+          <li><router-link to="edit-profile">Profil</router-link></li>
+          <li><router-link to="addFriend">Ajouter relation</router-link></li>
+          <li><a @click.prevent="logout" href="#">Se déconnecter</a></li>
+
+        </ul>
       </nav>
     </div>
   </div>
@@ -47,10 +50,15 @@ export default {
 }
 
 
-
-.nav-links {
+.title h1 {
+   color: black;
+  font-weight: 500;
+  background-color: transparent;
+}
+.nav-links ul {
   display: flex;
   gap: 20px;
+  list-style: none;
 }
 
 .nav-links a {
